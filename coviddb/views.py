@@ -10,7 +10,7 @@ from datetime import timedelta
 from coviddb.models import *
 
 def index(request):
-    numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'state_id')
+    numbers = JapanInfectedNumber.objects.values_list('state', 'death', 'discharge', 'hospitalization', 'positive', 'state_id')
     df = pd.DataFrame(numbers).iloc[:,:5]
     amount = [sum(df.iloc[:,1]), sum(df.iloc[:,2]), sum(df.iloc[:,3]), sum(df.iloc[:,4])]
     df.columns = settings.INFECTED_NUM_HEADER_NAME
