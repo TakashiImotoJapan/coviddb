@@ -137,13 +137,13 @@ INFECTED_LIST_COLUMN_NAME = [
     'state','id','city_no',
     'announce_date','infected_date','living_state','living_city','age',
     'sex','status','symptoms','occupation','close_contact','rel_close_contact',
-    'travel_history','travel_destination','remarks','cluster_location','discharge','death','death_date','full_presentation']
+    'travel_history','travel_destination','remarks','cluster_location','cluster_name','discharge','death','death_date','full_presentation']
 
 INFECTED_LIST_HEADER_NAME = [
     '都道府県','ID番号','全国地方公共団体コード',
     '公表_年月日','発症_年月日','患者_居住地','居住市町村','年代',
     '性別','状態','症状','職業','濃厚接触者','濃厚接触者との関係',
-    '渡航歴の有無','渡航場所','備考','クラスタ場所','退院済フラグ','死亡','死亡日時','発表全文']
+    '渡航歴の有無','渡航場所','備考','クラスタ種別','クラスタ場所','退院済フラグ','死亡','死亡日時','発表全文']
 
 INFECTED_LIST_SIMPLE_COLUMN_INDEX = [0, 1, 3, 4, 6, 7, 8, 9, 10, 11, 12]
 INFECTED_LIST_COLUMN_INDEX = INFECTED_LIST_HEADER_NAME[0:2]
