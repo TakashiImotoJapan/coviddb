@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content_body %}
+
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ AMOUNT.3 }}</h3>
+                    <p>死亡者数</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ AMOUNT.2 }}</h3>
+                    <p>重症者数</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ AMOUNT.1 }}</h3>
+                    <p>入院者数</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ AMOUNT.0 }}</h3>
+                    <p>感染者数</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <!-- Main row -->
+    <div class="row">
+        <section class="col-lg-6 connectedSortable">
+            <div class="card bg-sky">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        感染者数マップ
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="world-map" style="height: 500px; width: 100%;"></div>
+                </div>
+            </div>
+            <div class="card bg-white">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        感染者の年代
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
+            <div class="card bg-white">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        感染者数一覧
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="world-map" style="width: 100%;">
+                    {{ INFECTED_NUMBER_LIST|safe }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block content_script %}
+
+<!-- DataTables -->
+
+<script>
+    $(function () {
+
+        var visitorsData = {
+            {% for j in JP_INFECT_NUMBER %}'{{ j.5|stringformat:"02d" }}': {{ j.1 }},
+            {% endfor %}
+        }
+
+
+        $('#world-map').vectorMap({
+            map              : 'japan_ja',
+            backgroundColor  : 'transparent',
+            regionStyle      : {
+                initial: {
+                    fill: 'rgba(255, 255, 255, 0.7)',
+                    'fill-opacity' : 1,
+                    stroke :'rgba(0,0,0,.2)',
+                    'stroke-width'  : 1,
+                    'stroke-opacity': 1
+                }
+            },
+            series: {
+                regions: [{
+                    values : visitorsData,
+                    scale: ['#FFDDDD', '#880000'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            onRegionTipShow(e, tip, code){
+                tip.html(tip.html()+'('+visitorsData[code]+')');
+            },
+        })
+    })
+
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: {{ AGE_LIST|safe }},
+      datasets: [
+        {
+          data: {{ AGE_PAR }},
+          backgroundColor :  {{ CHART_COLOR|safe }},
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+
+    var donutChart = new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    })
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+    <style type="text/css">
+    <!--
+    tr th:nth-of-type(1) { width:30% }
+    -->
+    </style>
+{% endblock %}
+
+{% block content_body %}
+
+    <div id="world-map" style="height: 500px; width: 100%;"></div>
+
+{% endblock %}
+
+{% block content_script %}
+
+
+<script>
+    $(function () {
+
+var gdpData = {
+  "AF": 16.63,
+  "AL": 11.58,
+  "DZ": 158.97,
+};
+
+$('#world-map').vectorMap({
+  map: 'world_en',
+  series: {
+    regions: [{
+      values: gdpData,
+      scale: ['#C8EEFF', '#0071A4'],
+      normalizeFunction: 'polynomial'
+    }]
+  },
+  onRegionTipShow: function(e, el, code){
+    el.html(el.html()+' (GDP - '+gdpData[code]+')');
+  }
+});
+
+    })
+</script>
+
+{% endblock %}
+

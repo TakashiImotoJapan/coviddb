@@ -1,0 +1,77 @@
+{% load static %}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+        <span class="brand-text font-weight-light">COVID-19 DATABASE</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item menu-open">
+                    <a href="/" class="nav-link {% active '^/$' %}">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            トップ
+                            <i class="right fas"></i>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview {% menu_open '^/data' %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-table"></i>
+                        <p>一覧データ<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        {% for k, v in states|state_list %}
+                            <li class="nav-item">
+                                <a href="/data/{{ k }}" class="nav-link {% active '^/data/'|add:k %}">
+                                    <i class="far nav-icon"></i>
+                                    <p>{{ v }}</p>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview {% menu_open '^/analytics' %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>分析データ<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/analytics/num_patients" class="nav-link {% active '^/analytics/num_patients' %}">
+                                <i class="far nav-icon"></i>
+                                <p>全国患者数推移</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-header">このサイトについて</li>
+                <li class="nav-item">
+                    <a href="/about" class="nav-link">
+                        <i class="nav-icon fas fa-bullhorn"></i>
+                        <p>サイトの利用について</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/info" class="nav-link">
+                        <i class="nav-icon far fa-clipboard"></i>
+                        <p>更新情報</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/about_data" class="nav-link">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>データの利用について</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

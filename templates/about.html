@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+    <style type="text/css">
+    <!--
+    tr th:nth-of-type(1) { width:30% }
+    -->
+    </style>
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="content-header">
+		<h1 class="text-dark">このサイトについて</h1>
+    </div>
+
+    <div class="content px-2">
+        このサイトは、伊本貴士および、ボランティアによって開発されております。<br>
+        このサイトのデータは、都道府県の報道発表資料を参考に作成したものです。<br>
+        データ、その他について、決して正確である事を保証するものではありません。<br>
+        <br>
+        このサイトに関するお問い合わせは、info@media-sketch.comまでご連絡ください。
+    </div>
+
+{% endblock %}
+
+{% block content_script %}
+{% endblock %}
+

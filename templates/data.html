@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+    <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">DataTable with default features</h3>
+                </div>
+
+                <div class="card-body">
+                    {{ INFECTED_LIST|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_script %}
+
+<!-- DataTables -->
+<script src="{% static 'AdminLTE/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "info":     false,
+            "order": [[ 1, "desc" ]],
+        });
+    })
+</script>
+{% endblock %}
+

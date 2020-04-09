@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="row">
+        <div class="col-12">
+
+            <!-- STACKED BAR CHART -->
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">患者数推移（全国:発症日別）</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="stackedBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_script %}
+
+<script src="{% static 'AdminLTE/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/chart.js/Chart.min.js' %}"></script>
+
+<script>
+    $(function () {
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+
+        var stackedBarChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
+        var chart = new Chart(stackedBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
+            datasets:[
+                {% for value in INFECTED_NUM %}
+                {
+                    label               : '{{ value.0 }}',
+                    backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
+                    borderColor         : 'rgba({{ value.2 }}, 0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
+                    data:{{ value.1 }}
+                },
+                {% endfor %}
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+    })
+</script>
+{% endblock %}
+
