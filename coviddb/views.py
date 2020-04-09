@@ -103,6 +103,9 @@ def info(request):
 def about_data(request):
     return render(request, 'about_data.html')
 
+def data_link(request):
+    return render(request, 'data_link.html')
+
 def checkdate(s):
     date_format = '%Y/%M/%d'
     try:

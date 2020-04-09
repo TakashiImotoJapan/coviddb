@@ -5,11 +5,11 @@ import sys
 
 TABLE_NAME = "infected_list"
 
-df = pd.read_csv('../data/tokyo.csv')
+df = pd.read_csv('../data/csv/*.csv')
 
 conn = sqlite3.connect('../db.sqlite3')
 
-df.to_sql(TABLE_NAME, conn, if_exists='append', index=None)
+# df.to_sql(TABLE_NAME, conn, if_exists='append', index=None)
 
 df=pd.read_sql_query('SELECT * FROM %s' % TABLE_NAME, conn)
 
