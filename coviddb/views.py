@@ -6,6 +6,7 @@ from operator import itemgetter
 from django.conf import settings
 from datetime import datetime as dt
 from datetime import timedelta
+from coviddb.util import stateutil
 
 from coviddb.models import *
 
@@ -66,31 +67,11 @@ def detail(request, state, id):
 def num_patients(request):
 
     conn = sqlite3.connect(settings.DB_PATH)
-    df = pd.read_sql_query('SELECT state, infected_date, COUNT(infected_date) FROM %s GROUP BY state, infected_date order by infected_date' % (settings.INFECTED_LIST_TABLE_NAME), conn)
+    datelist, inf_list = stateutil.getNumByState(conn, 'infected_date')
+    datelist, ann_list = stateutil.getNumByState(conn, 'announce_date')
     conn.close()
 
-    nlist = []
-
-    # 日付条件の設定
-    start = dt.strptime("2020/01/15", '%Y/%m/%d')  # 開始日
-    end = dt.strptime("2020/04/04", '%Y/%m/%d')  # 終了日
-
-    states = State.objects.values_list('romam', 'jp', 'color').filter(disp=1)
-
-    datelist = list(map(lambda x, y=start: (y + timedelta(days=x)).strftime("%Y/%m/%d"), range((end - start).days + 1)))
-
-    for ro, jp, co in states:
-        sdf = df[df['state'] == ro]
-        lst = []
-        for d in datelist:
-            infnum = sdf[sdf['infected_date'] == d]['COUNT(infected_date)'].values
-            if len(infnum) > 0:
-                lst.append(int(infnum[0]))
-            else:
-                lst.append(0)
-        nlist.append([jp, lst, co])
-
-    context = {'CHART_LABEL': datelist, 'INFECTED_NUM': nlist}
+    context = {'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list}
 
     return render(request, 'patients.html', context)
 

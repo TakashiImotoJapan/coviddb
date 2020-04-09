@@ -9,8 +9,24 @@
 
     <div class="row">
         <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">患者数推移（全国:公表日別）</h3>
 
-            <!-- STACKED BAR CHART -->
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    入力されているデータ分を表示しております。入力が完了していない都道府県は表示されておりません。
+                    <div class="chart">
+                        <canvas id="announceBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
             <div class="card card-success">
                 <div class="card-header">
                     <h3 class="card-title">患者数推移（全国:発症日別）</h3>
@@ -27,7 +43,6 @@
                     </div>
                 </div>
             </div>
-            <!-- /.card -->
         </div>
     </div>
 {% endblock %}
@@ -62,6 +77,31 @@
             labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
             datasets:[
                 {% for value in INFECTED_NUM %}
+                {
+                    label               : '{{ value.0 }}',
+                    backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
+                    borderColor         : 'rgba({{ value.2 }}, 0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
+                    data:{{ value.1 }}
+                },
+                {% endfor %}
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+
+        var announceBarChartCanvas = $('#announceBarChart').get(0).getContext('2d')
+
+        var chart = new Chart(announceBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
+            datasets:[
+                {% for value in ANNOUNCE_NUM %}
                 {
                     label               : '{{ value.0 }}',
                     backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
