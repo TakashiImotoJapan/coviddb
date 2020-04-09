@@ -5,14 +5,23 @@ import sys
 
 TABLE_NAME = "infected_list"
 
-df = pd.read_csv('../data/csv/*.csv')
+import glob
+
+flist = glob.glob("../data/csv/*-data.csv")
+print(flist)
 
 conn = sqlite3.connect('../db.sqlite3')
 
-# df.to_sql(TABLE_NAME, conn, if_exists='append', index=None)
+cursor = conn.cursor()
+sql = 'delete from %s' % TABLE_NAME
+cursor.execute(sql)
+conn.commit()
 
-df=pd.read_sql_query('SELECT * FROM %s' % TABLE_NAME, conn)
+for f in flist:
+    df = pd.read_csv(f)
+    df.to_sql(TABLE_NAME, conn, if_exists='append', index=None)
 
-print(df)
+# df=pd.read_sql_query('SELECT * FROM %s' % TABLE_NAME, conn)
+# print(df)
 
 conn.close()
