@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    入力されているデータ分を表示しております。入力が完了していない都道府県は表示されておりません。
+                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
                     <div class="chart">
                         <canvas id="announceBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
                     </div>
@@ -40,6 +40,24 @@
                     発表日ではなく発症日です。東京都など発症日が調査中の都道府県があり、実際より少ない数になっています。
                     <div class="chart">
                         <canvas id="stackedBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">年代別推移</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
+                    <div class="chart">
+                        <canvas id="ageBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -111,6 +129,31 @@
                     pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
                     pointHighlightFill  : '#fff',
                     pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
+                    data:{{ value.1 }}
+                },
+                {% endfor %}
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+
+        var ageBarChartCanvas = $('#ageBarChart').get(0).getContext('2d')
+
+        var chart = new Chart(ageBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ AGE_LABEL }}{% endautoescape %},
+            datasets:[
+                {% for value in AGE_NUM %}
+                {
+                    label               : '{{ value.0 }}',
+                    backgroundColor     : '{{ value.2 }}',
+                    borderColor         : '{{ value.2 }}',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : '{{ value.2 }}',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: '{{ value.2 }}',
                     data:{{ value.1 }}
                 },
                 {% endfor %}

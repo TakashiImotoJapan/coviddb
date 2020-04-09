@@ -67,11 +67,15 @@ def detail(request, state, id):
 def num_patients(request):
 
     conn = sqlite3.connect(settings.DB_PATH)
-    datelist, inf_list = stateutil.getNumByState(conn, 'infected_date')
-    datelist, ann_list = stateutil.getNumByState(conn, 'announce_date')
+    datelist, inf_list = stateutil.getNumByState(conn, 'infected_date', 'state')
+    datelist, ann_list = stateutil.getNumByState(conn, 'announce_date', 'state')
+    age_label, age_list = stateutil.getNumByAge(conn, 'announce_date', 'age')
     conn.close()
 
-    context = {'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list}
+    context = {
+        'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list,
+        'AGE_LABEL': age_label, 'AGE_NUM': age_list,
+    }
 
     return render(request, 'patients.html', context)
 
