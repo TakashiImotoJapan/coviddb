@@ -164,3 +164,6 @@ AGE_LIST = ['10歳未満', '10代', '20代', '30代', '40代', '50代', '60代',
 CHART_COLOR = ['#e6b422', '#68be8d', '#bce2e8', '#007bbb', '#4d5aaf', '#f4b3c2', '#e60033', '#bf794e', '#f8e58c',
                   '#e9dfe5']
 
+
+ALLOWED_HOSTS = ['covid19db.info']
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
