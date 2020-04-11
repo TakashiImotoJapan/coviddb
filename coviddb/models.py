@@ -64,7 +64,8 @@ class InfectedPerson(models.Model):
         for f in self._meta.get_fields():
             val = str(getattr(self, f.name))
             val = '' if val == 'None' or val == 'nan' or val == '不明' else val
-            csv.append(val)
+            if f.name != 'id':
+                csv.append(val)
 
         return ','.join(csv)
 
@@ -96,6 +97,8 @@ class JapanInfectedNumber(models.Model):
     positive = models.IntegerField(null=True)
     hospitalization = models.IntegerField(null=True)
     discharge = models.IntegerField(null=True)
+    plus = models.IntegerField(null=True)
+    discharge_per = models.FloatField(null=True)
     death = models.IntegerField(null=True)
     state_id = models.IntegerField(null=True)
     date = models.CharField(max_length=16, null=True)

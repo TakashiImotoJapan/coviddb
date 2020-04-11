@@ -11,9 +11,13 @@ from coviddb.util import stateutil
 from coviddb.models import *
 
 def index(request):
-    numbers = JapanInfectedNumber.objects.values_list('state', 'death', 'discharge', 'hospitalization', 'positive', 'state_id')
+    numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'plus', 'discharge_per', 'state_id', 'date')
+
+    date = numbers[0][8].split('/')
+
     df = pd.DataFrame(numbers).iloc[:,:5]
-    amount = [sum(df.iloc[:,1]), sum(df.iloc[:,2]), sum(df.iloc[:,3]), sum(df.iloc[:,4])]
+
+    amount = [sum(df.iloc[:,1]), sum(df.iloc[:,2]), sum(df.iloc[:,3]), sum(df.iloc[:,4]), sum(pd.DataFrame(numbers).iloc[:,5])]
     df.columns = settings.INFECTED_NUM_HEADER_NAME
     inf_table = df.to_html(index=False, escape=False, table_id='data_table', classes='table table-sm table-striped')
 
@@ -26,6 +30,7 @@ def index(request):
         'AMOUNT': amount,
         'JP_INFECT_NUMBER': list(numbers),
         'INFECTED_NUMBER_LIST': inf_table,
+        'LAST_UPDATE': date,
         'AGE_PAR': list(df_age['COUNT(age)'])
     }
 

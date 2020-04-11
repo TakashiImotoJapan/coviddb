@@ -27,7 +27,7 @@ for f in flist:
 
             p = InfectedPerson()
             p.state = 'osaka'
-            p.id = d[1][1]
+            p.pat_id = d[1][1]
             p.age = d[1][2]
             p.setSexStr(d[1][3])
             p.living_city = str(d[1][4]) + str(d[1][6])
