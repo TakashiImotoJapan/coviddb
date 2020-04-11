@@ -1,9 +1,8 @@
 
 import sqlite3
 import pandas as pd
-import sys
 
-TABLE_NAME = "infected_list"
+TABLE_NAME = "coviddb_infectedperson"
 
 import glob
 
@@ -19,6 +18,8 @@ conn.commit()
 
 for f in flist:
     df = pd.read_csv(f)
+    df['age'].fillna(999)
+    df['sex'].fillna(2)
     df.to_sql(TABLE_NAME, conn, if_exists='append', index=None)
 
 # df=pd.read_sql_query('SELECT * FROM %s' % TABLE_NAME, conn)

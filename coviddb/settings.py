@@ -131,10 +131,10 @@ STATICFILES_DIRS = (
 )
 
 DB_PATH = 'db.sqlite3'
-INFECTED_LIST_TABLE_NAME = "infected_list"
+INFECTED_LIST_TABLE_NAME = "coviddb_infectedperson"
 
 INFECTED_LIST_COLUMN_NAME = [
-    'state','id','city_no',
+    'state','pat_id','city_no',
     'announce_date','infected_date','living_state','living_city','age',
     'sex','status','symptoms','occupation','close_contact','rel_close_contact',
     'travel_history','travel_destination','remarks','cluster_location','cluster_name','discharge','death','death_date','full_presentation']

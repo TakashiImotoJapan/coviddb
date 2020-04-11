@@ -35,9 +35,10 @@ def data(request, state):
     conn = sqlite3.connect(settings.DB_PATH)
     col = itemgetter(*settings.INFECTED_LIST_SIMPLE_COLUMN_INDEX)(settings.INFECTED_LIST_COLUMN_NAME)
 
-    df = pd.read_sql_query('SELECT %s FROM %s where state = \'%s\'' % (",".join(col), settings.INFECTED_LIST_TABLE_NAME, state), conn)
+    df = pd.DataFrame(list(InfectedPerson.objects.filter(state=state).values('state', 'pat_id', 'announce_date', 'infected_date', 'living_city', 'age', 'sex', 'status', 'symptoms', 'occupation', 'close_contact')))
+
     df.replace([None], '', inplace=True)
-    df['id'] = df['id'].apply(lambda x: '<a href="/data/{1}/{0}">{0}</a>'.format(x, state))
+    df['pat_id'] = df['pat_id'].apply(lambda x: '<a href="/data/{1}/{0}">{0}</a>'.format(x, state))
     df['sex'] = df['sex'].replace(settings.SEX_DIC)
     df['state'] = df['state'].replace(dict(State.objects.values_list('romam', 'jp')))
     df = df.rename(columns=settings.INFECTED_LIST_HEADER_DICT)
@@ -51,7 +52,8 @@ def detail(request, state, id):
 
     conn = sqlite3.connect(settings.DB_PATH)
 
-    df = pd.read_sql_query('SELECT * FROM %s where state = \'%s\' and id = \'%s\'' % (settings.INFECTED_LIST_TABLE_NAME, state, id), conn)
+    df = pd.DataFrame(list(InfectedPerson.objects.filter(pat_id=id).filter(state=state).values()))
+
     df.replace([None], '', inplace=True)
     df['full_presentation'] = df['full_presentation'].str.replace('\n', '<br>')
     df = df.rename(columns=settings.INFECTED_LIST_HEADER_DICT)

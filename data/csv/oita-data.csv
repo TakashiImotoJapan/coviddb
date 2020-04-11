@@ -1,4 +1,4 @@
-state,id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
+state,pat_id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
 oita,1,440001,2020/03/03,,大分県,大分市,30,1,,,接客業,,,,,,,,,,,
 oita,2,440001,2020/03/19,,大分県,臼杵市,60,0,,,自営業,,,,,,,,,,,
 oita,3,440001,2020/03/19,,大分県,臼杵市,60,1,,,無職,,,,,,,,,,,

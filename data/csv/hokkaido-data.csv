@@ -1,4 +1,4 @@
-state,id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
+state,pat_id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
 hokkaido,1,,2020/01/28,,中華人民共和国,武漢市,40,1,,,,,,,,,,,,,,濃厚接触者を特定し 健康観察終了
 hokkaido,2,,2020/02/14,,北海道,札幌市,50,0,,,自営業,,,,,,,,,,,札幌市公表中
 hokkaido,3,,2020/02/19,,北海道,札幌市,40,0,,,会社員,Hokkaido-5,,,,,,,,,,札幌市公表中

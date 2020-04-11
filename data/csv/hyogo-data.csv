@@ -1,4 +1,4 @@
-state,id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
+state,pat_id,city_no,announce_date,infected_date,living_state,living_city,age,sex,status,symptoms,occupation,close_contact,rel_close_contact,travel_history,travel_destination,remarks,cluster_location,cluster_name,discharge,death,death_date,full_presentation
 hyogo,1,,2020/03/01,2020/02/25,兵庫県,西宮市,40,0,,,会社員,,,0,,,,,,,,特定できず
 hyogo,2,,2020/03/03,2020/02/27,兵庫県,神戸市,40,0,,,会社員,,,0,,,,,,,,調査済
 hyogo,3,,2020/03/03,2020/02/21,兵庫県,神戸市,40,1,,,会社員,,,0,,,ライブハウス,ライブハウスArc,,,,2/15、16に大阪のライブハウスArcに参加
