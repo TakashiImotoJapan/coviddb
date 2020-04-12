@@ -75,11 +75,11 @@
     <!-- Main row -->
     <div class="row">
         <section class="col-lg-6 connectedSortable">
-            <div class="card bg-sky">
+            <div class="card" style="background-color: #f0f8ff">
                 <div class="card-header border-0">
                     <h3 class="card-title">
                         <i class="fas fa-map-marker-alt mr-1"></i>
-                        感染者数マップ
+                        感染者数マップ（前日からの増加数）
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -91,6 +91,24 @@
                     <div id="world-map" style="height: 500px; width: 100%;"></div>
                 </div>
             </div>
+            <div class="card" style="background-color: #f0f8ff">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        感染者数マップ（人口1万人あたりの感染者数）
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="world-map2" style="height: 500px; width: 100%;"></div>
+                </div>
+            </div>
+        </section>
+        <section class="col-lg-6 connectedSortable">
             <div class="card bg-white">
                 <div class="card-header border-0">
                     <h3 class="card-title">
@@ -107,8 +125,6 @@
                     <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
-        </section>
-        <section class="col-lg-6 connectedSortable">
             <div class="card bg-white">
                 <div class="card-header border-0">
                     <h3 class="card-title">
@@ -140,10 +156,14 @@
     $(function () {
 
         var visitorsData = {
-            {% for j in JP_INFECT_NUMBER %}'{{ j.5|stringformat:"02d" }}': {{ j.1 }},
+            {% for j in JP_INFECT_NUMBER %}'{{ j.7|stringformat:"02d" }}': {{ j.5 }},
             {% endfor %}
         }
 
+        var perData = {
+            {% for j in JP_INFECT_NUMBER %}'{{ j.7|stringformat:"02d" }}': {{ j.6 }},
+            {% endfor %}
+        }
 
         $('#world-map').vectorMap({
             map              : 'japan_ja',
@@ -160,12 +180,35 @@
             series: {
                 regions: [{
                     values : visitorsData,
-                    scale: ['#FFDDDD', '#880000'],
+                    scale: ['#ffffff', '#000080'],
                     normalizeFunction: 'polynomial'
                 }]
             },
             onRegionTipShow(e, tip, code){
-                tip.html(tip.html()+'('+visitorsData[code]+'%)');
+                tip.html(tip.html()+'(+'+visitorsData[code]+')');
+            },
+        })
+        $('#world-map2').vectorMap({
+            map              : 'japan_ja',
+            backgroundColor  : 'transparent',
+            regionStyle      : {
+                initial: {
+                    fill: 'rgba(255, 255, 255, 0.7)',
+                    'fill-opacity' : 1,
+                    stroke :'rgba(0,0,0,.2)',
+                    'stroke-width'  : 1,
+                    'stroke-opacity': 1
+                }
+            },
+            series: {
+                regions: [{
+                    values : perData,
+                    scale: ['#ffffff', '#000080'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            onRegionTipShow(e, tip, code){
+                tip.html(tip.html()+'(+'+perData[code]+')');
             },
         })
     })

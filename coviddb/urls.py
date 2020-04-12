@@ -31,5 +31,5 @@ urlpatterns = [
     path('about_data', coviddb.views.about_data, name='about_data'),
     path('data_link', coviddb.views.data_link, name='data_link'),
 
-    url(r'^admin/', admin.site.urls),
+    url(r'^manage/', admin.site.urls),
 ]
