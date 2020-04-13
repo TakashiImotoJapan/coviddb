@@ -29,14 +29,6 @@ class InfectedPerson(models.Model):
     death_date = models.CharField(default='', max_length=10, null=True)
     full_presentation = models.CharField(default='', max_length=8096, null=True)
 
-    def createDateStr(self, val):
-        if type(val) == datetime.datetime:
-            return val.strftime('%Y/%m/%d')
-        elif type(val) == str:
-            return val.replace('-', '/')
-        else:
-            return ''
-
     def setAge(self, val):
         val = val.strip("代")
         if val.isdecimal():

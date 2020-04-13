@@ -3,9 +3,7 @@ import pandas as pd
 from django.template.response import TemplateResponse
 from django.urls import path
 from coviddb.util.state.kousei import getKouseiData
-from coviddb.util.state.tokyo import getTokyoData
-from coviddb.util.state.osaka import getOsakaData
-from coviddb.util.state.hokkaido import getHokkaidoData
+from coviddb.util.state.state import *
 
 from .models import State, JapanInfectedNumber
 from django.contrib import admin
@@ -22,9 +20,10 @@ class MyModelAdmin(admin.ModelAdmin):
 
         my_urls = [
             path('kousei/', self.admin_site.admin_view(self.kousei, cacheable=True)),
-            path('tokyo/', self.admin_site.admin_view(self.tokyo, cacheable=True)),
-            path('osaka/', self.admin_site.admin_view(self.osaka, cacheable=True)),
-            path('hokkaido/', self.admin_site.admin_view(self.hokkaido, cacheable=True)),
+            path('tokyo/', self.admin_site.admin_view(self.state, cacheable=True)),
+            path('osaka/', self.admin_site.admin_view(self.state, cacheable=True)),
+            path('hokkaido/', self.admin_site.admin_view(self.state, cacheable=True)),
+            path('hyogo/', self.admin_site.admin_view(self.state, cacheable=True)),
         ]
         return my_urls + urls
 
@@ -76,40 +75,23 @@ class MyModelAdmin(admin.ModelAdmin):
 
         return TemplateResponse(request, "admin/kousei.html", context)
 
-    def tokyo(self, request, *args, **kwargs):
+    def state(self, request, *args, **kwargs):
 
         csv_data = ''
 
         if request.POST.get('url', None):
-            print(request.POST.get('url', None))
-            csv_data = getTokyoData(request.POST.get('url', None))
-            print(csv_data)
+            request_url = (str(request.path).split('/'))
+            state = request_url[len(request_url)-2]
+            if state == 'tokyo':
+                csv_data = getTokyoData(request.POST.get('url', None))
+            elif state == 'hokkaido':
+                csv_data = getHokkaidoData(request.POST.get('url', None))
+            elif state == 'osaka':
+                csv_data = getOsakaData(request.POST.get('url', None))
+            elif state == 'hyogo':
+                csv_data = getHyogoData(request.POST.get('url', None))
 
         context = {'URL': request.path, 'CSV_DATA': csv_data}
 
         return TemplateResponse(request, "admin/view_csv.html", context)
 
-    def osaka(self, request, *args, **kwargs):
-
-        csv_data = ''
-
-        if request.POST.get('url', None):
-            print(request.POST.get('url', None))
-            csv_data = getOsakaData(request.POST.get('url', None))
-            print(csv_data)
-
-        context = {'URL': request.path, 'CSV_DATA': csv_data}
-
-        return TemplateResponse(request, "admin/view_csv.html", context)
-
-    def hokkaido(self, request, *args, **kwargs):
-
-        csv_data = ''
-
-        if request.POST.get('url', None):
-            print(request.POST.get('url', None))
-            csv_data = getHokkaidoData(request.POST.get('url', None))
-
-        context = {'URL': request.path, 'CSV_DATA': csv_data}
-
-        return TemplateResponse(request, "admin/view_csv.html", context)
