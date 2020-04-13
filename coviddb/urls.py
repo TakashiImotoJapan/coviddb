@@ -33,3 +33,4 @@ urlpatterns = [
 
     url(r'^manage/', admin.site.urls),
 ]
+

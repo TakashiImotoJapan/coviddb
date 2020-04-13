@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from coviddb.util.util import is_int
 import numpy as np
 
 class InfectedPerson(models.Model):
@@ -44,10 +45,10 @@ class InfectedPerson(models.Model):
             self.age = 999
 
     def setCloseContact(self, val):
-        if type(val) == int:
-            self.close_contact = "%s-%s" % (self.state, val)
+        if is_int(val) or type(val) == int:
+            self.close_contact += "%s-%s " % (self.state, val)
         else:
-            self.close_contact = val
+            self.close_contact += "%s " % (val)
 
     def setSexStr(self, val):
         if(val != None):
@@ -57,6 +58,14 @@ class InfectedPerson(models.Model):
                 self.sex = 1
             else:
                 self.sex = 2
+
+    def setStatus(self, val):
+        if '軽' in val or '中' in val :
+            self.status = '軽症'
+        elif '無症状' in val:
+            self.status = '無症状'
+        elif '重' in val:
+            self.status = '重症'
 
     def to_csv(self):
         csv = []

@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+    <div style="width: 100%">
+        <a href="https://www.mhlw.go.jp/stf/houdou/index.html" target="_blank">厚生労働省</a>
+    </div>
+
+    <div style="width: 100%">
+        <form href="/manage/coviddb/japaninfectednumber/kousei/" method="post">
+            {% csrf_token %}
+            <input type="text" name="url" style="width: 500px">
+        <input type="submit" value="確認">
+        <form href="/manage/coviddb/japaninfectednumber/kousei/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="data" value="{{ LIST_DATA }}" style="width: 500px">
+        <input type="submit" value="登録">
+    </div>
+
+    <div style="width: 100%">
+        {{ TABLE_DATA|safe }}
+    </div>
+
+    </form>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+    <div style="width: 100%">
+        <a href="https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv" target="_blank">東京都</a><br>
+        <a href="https://www.harp.lg.jp/opendata/dataset/1369.html" target="_blank">北海道</a><br>
+    </div>
+
+    <div style="width: 100%">
+        <form href="{{ URL }}" method="post">
+            {% csrf_token %}
+            <input type="text" name="url" style="width: 500px">
+        <input type="submit" value="確認">
+    </div>
+
+    <div style="width: 100%">
+        {% for l in CSV_DATA %}{{ l }}<br>
+        {% endfor %}
+    </div>
+
+    </form>
+{% endblock %}
