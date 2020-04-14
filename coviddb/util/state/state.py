@@ -6,6 +6,7 @@ from coviddb.models import InfectedPerson
 from coviddb.util.util import is_int, createDateStr
 
 import pandas
+from tika import parser
 
 pandas.set_option('display.max_columns', 500)
 pandas.set_option('display.max_rows', 500)
@@ -176,3 +177,19 @@ def getHyogoData(url):
             data.insert(0, p.to_csv())
 
     return data
+
+def getChibaData(url):
+
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return
+
+
+
+    print(response.text.encode("EUC_JP"))
+
+    file_data = parser.from_buffer(response.content)
+    text = file_data["content"]
+
+    data = []

@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="row">
+        {% include 'parts/amount.html' with positive=AMOUNT.0 plus=AMOUNT.4 hospitalization=AMOUNT.1 discharge=AMOUNT.2 death=AMOUNT.3 only %}
+    </div>
+
+    <div class="row" style="background-color: #bce8f1">
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">市町村別患者数（判明分のみ）</h3>
+                </div>
+                <div class="card-body">
+                    <div style="width: 100%; text-align: left; margin-bottom: 5px;">
+                    自治体の発表を元に作成しております。非公表、調査分、不明の患者がいるため正確な数字ではありません。
+                    </div>
+                    {% for c in CITY_LIST %}
+                    <div style="width: 20%; float:left;">
+                        <div class="{% if c.1 < 10 %}bg-info{% elif c.1 < 100 %}bg-warning{% else %}bg-danger{% endif %}" style="text-align: center; margin: 5px; padding-top: 15px; padding-bottom: 5px; height: 80px;">
+                            <div class="inner">
+                                <h6>{{ c.0 }}</h6>
+                                <h4>{{ c.1 }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 20px"></div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">患者数推移（全国:公表日別）</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
+                    <div class="chart">
+                        <canvas id="announceBarChart" style="min-height: 250px; height: 300px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">患者数推移（全国:発症日別）</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    発表日ではなく"発症日"別のデータです。東京都など発症日が調査中の都道府県があり、全員分のデータがないので正確な数値ではありません。
+                    <div class="chart">
+                        <canvas id="stackedBarChart" style="min-height: 250px; height: 300px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">年代別推移</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
+                    <div class="chart">
+                        <canvas id="ageBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_script %}
+
+<script src="{% static 'AdminLTE/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/chart.js/Chart.min.js' %}"></script>
+
+<script>
+    $(function () {
+
+        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+
+        var stackedBarChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
+        var chart = new Chart(stackedBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
+            datasets:[
+                {
+                    label               : '感染者数' + '({{ STATE_NAME }})',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data:{{ INFECTED_NUM }}
+                },
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+
+        var announceBarChartCanvas = $('#announceBarChart').get(0).getContext('2d')
+
+        var chart = new Chart(announceBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
+            datasets:[
+                {
+                    label               : '感染者数' + '({{ STATE_NAME }})',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data:{{ ANNOUNCE_NUM }}
+                },
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+
+        var ageBarChartCanvas = $('#ageBarChart').get(0).getContext('2d')
+
+        var chart = new Chart(ageBarChartCanvas, {
+            type: "bar",
+            data:{
+            labels:{% autoescape off %}{{ AGE_LABEL }}{% endautoescape %},
+            datasets:[
+                {% for value in AGE_NUM %}
+                {
+                    label               : '{{ value.0 }}',
+                    backgroundColor     : '{{ value.2 }}',
+                    borderColor         : '{{ value.2 }}',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : '{{ value.2 }}',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: '{{ value.2 }}',
+                    data:{{ value.1 }}
+                },
+                {% endfor %}
+            ]
+            },
+            options:stackedBarChartOptions
+        });
+    })
+</script>
+{% endblock %}
+

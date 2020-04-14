@@ -17,55 +17,8 @@
     </div>
 
     <!-- Small boxes (Stat box) -->
-    <div class="row bg-white">
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ AMOUNT.0 }}(+{{ AMOUNT.4 }})</h3>
-                    <p>感染者数</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ AMOUNT.1 }}</h3>
-                    <p>入院者数</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>{{ AMOUNT.2 }}</h3>
-                    <p>重症者数</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{ AMOUNT.3 }}</h3>
-                    <p>死亡者数</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
+    <div class="row">
+        {% include 'parts/amount.html' with positive=AMOUNT.0 plus=AMOUNT.4 hospitalization=AMOUNT.1 discharge=AMOUNT.2 death=AMOUNT.3 only %}
         <div class="col-lg-12 col-6 text-right">
             <a href="https://www.mhlw.go.jp/stf/newpage_10723.html" target="_blank">厚生労働省 {{ LAST_UPDATE.0 }}年{{ LAST_UPDATE.1 }}月{{ LAST_UPDATE.2 }}日発表</a>
         </div>

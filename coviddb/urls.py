@@ -26,6 +26,8 @@ urlpatterns = [
     path('data/<str:state>/', coviddb.views.data, name='data_list'),
     path('data/<str:state>/<int:id>', coviddb.views.detail, name='data_detail'),
 
+    path('state/<str:state>/', coviddb.views.state, name='data_list'),
+
     path('about', coviddb.views.about, name='about'),
     path('info', coviddb.views.info, name='info'),
     path('about_data', coviddb.views.about_data, name='about_data'),

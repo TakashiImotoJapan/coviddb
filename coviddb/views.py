@@ -1,12 +1,11 @@
 from django.shortcuts import render
 import sqlite3
-import datetime
 import pandas as pd
 from operator import itemgetter
 from django.conf import settings
-from datetime import datetime as dt
-from datetime import timedelta
 from coviddb.util import stateutil
+from django.db.models import Count
+from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
 
@@ -105,3 +104,49 @@ def checkdate(s):
         return True
     except ValueError:
         return False
+
+def state(request, state):
+
+    inf_list = []
+    ann_list = []
+    age_label = []
+    age_list = []
+
+    sname = State.objects.get(romam=state).jp
+    state_id = State.objects.get(romam=state).id
+
+    datelist = getDateLabelList()
+    inf_numbers = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('infected_date').annotate(dcount=Count('infected_date')))
+    ann_numbers = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('announce_date').annotate(dcount=Count('announce_date')))
+
+    for d in datelist:
+        inf = inf_numbers.query('infected_date in ["%s"]' % (str(d)))['dcount'].tolist()
+        inf_list.append( inf[0] if len(inf) > 0 else 0 )
+
+        ann = ann_numbers.query('announce_date in ["%s"]' % (str(d)))['dcount'].tolist()
+        ann_list.append( ann[0] if len(ann) > 0 else 0 )
+
+    age_numbers = pd.DataFrame(InfectedPerson.objects.filter(age__lte=90).values('age', 'announce_date').annotate(age_count=Count('age')).annotate(ann_count=Count('announce_date')))
+    color = settings.CHART_COLOR
+
+    for age in np.arange(0, 10):
+        dnum = []
+        for d in datelist:
+            inf_num = age_numbers[age_numbers['announce_date'] == d][age_numbers['age'] == age*10]['ann_count'].values
+            if len(inf_num) > 0:
+                dnum.append(inf_num[0])
+            else:
+                dnum.append(0)
+        age_list.append([age*10, dnum, color[age]])
+
+    numbers = JapanInfectedNumber.objects.filter(state_id=state_id).values_list('positive', 'hospitalization', 'discharge', 'death', 'plus')
+
+    city_list = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('living_city').annotate(city_count=Count('living_city'))).dropna()
+
+    context = {
+        'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list,
+        'AGE_LABEL': datelist, 'AGE_NUM': age_list, 'AMOUNT': list(numbers[0]), 'STATE_NAME': sname,
+        'CITY_LIST': city_list.values.tolist(),
+    }
+
+    return render(request, 'state.html', context)

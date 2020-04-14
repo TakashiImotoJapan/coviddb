@@ -24,6 +24,7 @@ class MyModelAdmin(admin.ModelAdmin):
             path('osaka/', self.admin_site.admin_view(self.state, cacheable=True)),
             path('hokkaido/', self.admin_site.admin_view(self.state, cacheable=True)),
             path('hyogo/', self.admin_site.admin_view(self.state, cacheable=True)),
+            path('chiba/', self.admin_site.admin_view(self.state, cacheable=True)),
         ]
         return my_urls + urls
 
@@ -49,6 +50,7 @@ class MyModelAdmin(admin.ModelAdmin):
                     regist.append(line.split(','))
                 print(regist)
                 for d in regist:
+                    print(d)
                     st = State.objects.get(jp=d[0])
                     d[1] = d[1] if is_int(d[1]) else 0
                     d[2] = d[2] if is_int(d[2]) else 0
@@ -90,6 +92,8 @@ class MyModelAdmin(admin.ModelAdmin):
                 csv_data = getOsakaData(request.POST.get('url', None))
             elif state == 'hyogo':
                 csv_data = getHyogoData(request.POST.get('url', None))
+            elif state == 'chiba':
+                csv_data = getChibaData(request.POST.get('url', None))
 
         context = {'URL': request.path, 'CSV_DATA': csv_data}
 

@@ -26,7 +26,7 @@ class Command(BaseCommand):
                     words[0].replace(' ', '')
                     data.append(words)
 
-#        print(data)
+        print(data)
         if(len(data) < 40):
             return
 

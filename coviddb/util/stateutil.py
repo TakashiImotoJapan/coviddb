@@ -4,6 +4,7 @@ import numpy as np
 from django.conf import settings
 from datetime import datetime as dt
 from datetime import timedelta
+from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
 
@@ -12,12 +13,9 @@ def getNumByAge(conn, col, group):
         ('SELECT %s, %s, COUNT(%s) FROM %s GROUP BY %s, %s order by %s' %
             (group, col, col, settings.INFECTED_LIST_TABLE_NAME, group, col, col), conn)
 
+    label = getDateLabelList()
+
     data = []
-
-    start = dt.strptime("2020/01/15", '%Y/%m/%d')  # 開始日
-    end = dt.now()
-
-    label = list(map(lambda x, y=start: (y + timedelta(days=x)).strftime("%Y/%m/%d"), range((end - start).days + 1)))
 
     color = settings.CHART_COLOR
 
@@ -41,13 +39,9 @@ def getNumByState(conn, col, group):
 
     nlist = []
 
-    # 日付条件の設定
-    start = dt.strptime("2020/01/15", '%Y/%m/%d')  # 開始日
-    end = dt.now()
-
     states = State.objects.values_list('romam', 'jp', 'color').filter(disp=1)
 
-    datelist = list(map(lambda x, y=start: (y + timedelta(days=x)).strftime("%Y/%m/%d"), range((end - start).days + 1)))
+    datelist = getDateLabelList()
 
     for ro, jp, co in states:
         sdf = df[df[group] == ro]

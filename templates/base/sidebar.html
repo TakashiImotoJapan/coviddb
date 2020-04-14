@@ -20,6 +20,36 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item has-treeview {% menu_open '^/analytics' %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>分析データ（全国）<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/analytics/num_patients" class="nav-link {% active '^/analytics/num_patients' %}">
+                                <i class="far nav-icon"></i>
+                                <p>全国患者数推移</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview {% menu_open '^/state' %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>分析データ（都道府県別）<i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        {% for k, v in states|state_list %}
+                            <li class="nav-item">
+                                <a href="/state/{{ k }}" class="nav-link {% active '^/state/'|add:k %}">
+                                    <i class="far nav-icon"></i>
+                                    <p>{{ v }}</p>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 <li class="nav-item has-treeview {% menu_open '^/data' %}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
@@ -34,21 +64,6 @@
                                 </a>
                             </li>
                         {% endfor %}
-                    </ul>
-                </li>
-
-                <li class="nav-item has-treeview {% menu_open '^/analytics' %}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>分析データ<i class="fas fa-angle-left right"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/analytics/num_patients" class="nav-link {% active '^/analytics/num_patients' %}">
-                                <i class="far nav-icon"></i>
-                                <p>全国患者数推移</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
 
