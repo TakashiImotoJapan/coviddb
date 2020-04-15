@@ -11,7 +11,7 @@
         {% include 'parts/amount.html' with positive=AMOUNT.0 plus=AMOUNT.4 hospitalization=AMOUNT.1 discharge=AMOUNT.2 death=AMOUNT.3 only %}
     </div>
 
-    <div class="row" style="background-color: #bce8f1">
+    <div class="row">
         <div class="col-12">
             <div class="card card-success">
                 <div class="card-header">
@@ -20,10 +20,11 @@
                 <div class="card-body">
                     <div style="width: 100%; text-align: left; margin-bottom: 5px;">
                     自治体の発表を元に作成しております。非公表、調査分、不明の患者がいるため正確な数字ではありません。
+                    青：10人以下, 緑:30人以下, 黄:100人以下, 赤:101人以上
                     </div>
                     {% for c in CITY_LIST %}
                     <div style="width: 20%; float:left;">
-                        <div class="{% if c.1 < 10 %}bg-info{% elif c.1 < 100 %}bg-warning{% else %}bg-danger{% endif %}" style="text-align: center; margin: 5px; padding-top: 15px; padding-bottom: 5px; height: 80px;">
+                        <div class="{% if c.1 < 10 %}bg-info{% elif c.1 < 30 %}bg-success{% elif c.1 < 100 %}bg-warning{% else %}bg-danger{% endif %}" style="text-align: center; margin: 5px; padding-top: 15px; padding-bottom: 5px; height: 80px;">
                             <div class="inner">
                                 <h6>{{ c.0 }}</h6>
                                 <h4>{{ c.1 }}</h4>
