@@ -112,6 +112,8 @@ def state(request, state):
     age_label = []
     age_list = []
 
+    lay = ''
+
     sname = State.objects.get(romam=state).jp
     state_id = State.objects.get(romam=state).id
 
@@ -119,7 +121,10 @@ def state(request, state):
     inf_numbers = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('infected_date').annotate(dcount=Count('infected_date')))
     ann_numbers = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('announce_date').annotate(dcount=Count('announce_date')))
 
+
     if len(inf_numbers.all()) > 0 and len(ann_numbers.all()) > 0:
+        lday = max(ann_numbers['announce_date'].dropna().values,
+                   key=lambda d: datetime.datetime.strptime(d, '%Y/%m/%d'))
         for d in datelist:
             inf = inf_numbers.query('infected_date in ["%s"]' % (str(d)))['dcount'].tolist()
             inf_list.append( inf[0] if len(inf) > 0 else 0 )
@@ -148,7 +153,21 @@ def state(request, state):
     context = {
         'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list,
         'AGE_LABEL': datelist, 'AGE_NUM': age_list, 'AMOUNT': list(numbers[0]), 'STATE_NAME': sname,
-        'CITY_LIST': city_list.values.tolist(),
+        'CITY_LIST': city_list.values.tolist(), 'SNAME': sname, 'LAST_DAY': lday,
     }
 
     return render(request, 'state.html', context)
+
+
+def cluster(request):
+
+    inf_numbers = pd.DataFrame(InfectedPerson.objects.values('cluster_location').annotate(ccount=Count('cluster_location')))
+
+    inf_numbers = inf_numbers.dropna().sort_values('ccount', ascending=False)
+
+    context = {
+        'CHART_LABEL': inf_numbers['cluster_location'].values.tolist(),
+        'INFECTED_NUM': inf_numbers['ccount'].values.tolist(),
+    }
+
+    return render(request, 'cluster.html', context)

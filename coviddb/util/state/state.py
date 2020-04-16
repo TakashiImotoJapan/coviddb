@@ -4,6 +4,7 @@ import requests
 from coviddb.models import InfectedPerson
 
 from coviddb.util.util import is_int, createDateStr
+from io import BytesIO
 
 import pandas
 from tika import parser
@@ -54,29 +55,29 @@ def getOsakaData(url):
     if response.status_code != 200:
         return
 
+    df = pandas.read_excel(BytesIO(response.content))
+
+    df = df.rename(columns=lambda x: x if not 'Unnamed' in str(x) else '')
+    df = df.reset_index()
+
     data = []
 
-    tdata = []
-    for line in response.text.splitlines():
-        tdata.append(line.split(','))
-
-    for row in tdata:
-        if is_int(row[0]):
+    for d in df.iterrows():
+        if (type(d[1][1]) == int):
+            print(d[1])
             p = InfectedPerson()
-            p.state = 'tokyo'
-            p.pat_id = row[0]
-            p.city_no = row[1]
-            p.living_city = row[3]
-            p.announce_date = createDateStr(row[4])
-            p.infected_date = createDateStr(row[6])
-            p.living_state = '東京都' if row[7] == '都内' else row[7]
-            p.setAge(row[8])
-            p.setSexStr(row[9])
-            p.living_state = row[11]
-            p.symptoms = row[12]
-            p.travel_history = row[13]
-            p.remarks = row[14]
-            p.discharge = row[15]
+            p.state = 'osaka'
+            p.pat_id = d[1][1]
+            p.age = d[1][2]
+            p.setSexStr(d[1][3])
+            p.living_city = str(d[1][4]) + str(d[1][6])
+            p.occupation = job = d[1][9]
+            p.infected_date = createDateStr(d[1][11])
+            p.status = d[1][13]
+
+            p.setCloseContact(d[1][15])
+
+            p.remarks = d[1][18]
 
             data.append(p.to_csv())
 

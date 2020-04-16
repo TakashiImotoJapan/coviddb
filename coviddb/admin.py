@@ -32,6 +32,7 @@ class MyModelAdmin(admin.ModelAdmin):
 
         list_data = []
         table = ''
+        delta = 1
 
         if request.POST.get('url', None):
             print(request.POST.get('url', None))
@@ -52,24 +53,24 @@ class MyModelAdmin(admin.ModelAdmin):
                 for d in regist:
                     print(d)
                     st = State.objects.get(jp=d[0])
-                    d[1] = d[1] if is_int(d[1]) else 0
-                    d[2] = d[2] if is_int(d[2]) else 0
-                    d[3] = d[3] if is_float(d[3]) else 0
-                    d[4] = d[4] if is_int(d[4]) else 0
-                    d[6] = d[6] if is_int(d[6]) else 0
-                    d[8] = d[8] if is_int(d[8]) else 0
+                    d[1+delta] = d[1+delta] if is_int(d[1+delta]) else 0
+                    d[2+delta] = d[2+delta] if is_int(d[2+delta]) else 0
+                    d[3+delta] = d[3+delta] if is_float(d[3+delta]) else 0
+                    d[4+delta] = d[4+delta] if is_int(d[4+delta]) else 0
+                    d[6+delta] = d[6+delta] if is_int(d[6+delta]) else 0
+                    d[8+delta] = d[8+delta] if is_int(d[8+delta]) else 0
 
                     JapanInfectedNumber.objects.update_or_create(
                         state_id = st.id,
                         defaults={
                             'state': st.jp,
                             'date': datetime.date.today().strftime('%Y/%m/%d'),
-                            'positive': d[1],
-                            'plus': d[2],
-                            'discharge_per': d[3],
-                            'hospitalization': d[4],
-                            'discharge': d[6],
-                            'death': d[8],
+                            'positive': d[1+delta],
+                            'plus': d[2+delta],
+                            'discharge_per': d[3+delta],
+                            'hospitalization': d[4+delta],
+                            'discharge': d[6+delta],
+                            'death': d[8+delta],
                         }
                     )
 
