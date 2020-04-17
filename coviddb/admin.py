@@ -66,7 +66,7 @@ class MyModelAdmin(admin.ModelAdmin):
 
                     JapanInfectedNumber.objects.update_or_create(
                         state_id = st.id,
-                        date = datetime.date.today().strftime('%Y/%m/%d'),
+                        date = (datetime.date.today() - datetime.timedelta(days=1)).strftime('%Y/%m/%d'),
                         defaults={
                             'state': st.jp,
                             'positive': d[2+delta],

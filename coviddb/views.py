@@ -149,14 +149,16 @@ def state(request, state):
                     dnum.append(0)
             age_list.append([age*10, dnum, color[age]])
 
-    numbers = JapanInfectedNumber.objects.filter(state_id=state_id).values_list('positive', 'hospitalization', 'discharge', 'death', 'positive_plus')
+    numbers = JapanInfectedNumber.objects.filter(state_id=state_id).values_list('positive', 'hospitalization', 'discharge', 'death', 'positive_plus', 'date').order_by('date').reverse()
+    numbers_amount = numbers.filter(date=numbers[0][5]).order_by('positive')
+    numbers = numbers.reverse()
 
     city_list = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('living_city').annotate(city_count=Count('living_city'))).dropna()
 
     context = {
         'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list,
-        'AGE_LABEL': datelist, 'AGE_NUM': age_list, 'AMOUNT': list(numbers[0]), 'STATE_NAME': sname,
-        'CITY_LIST': city_list.values.tolist(), 'SNAME': sname, 'LAST_DAY': lday,
+        'AGE_LABEL': datelist, 'AGE_NUM': age_list, 'AMOUNT': list(numbers_amount[0]), 'STATE_NAME': sname,
+        'CITY_LIST': city_list.values.tolist(), 'SNAME': sname, 'LAST_DAY': lday, 'INF_NUM': numbers,
     }
 
     return render(request, 'state.html', context)
