@@ -96,11 +96,14 @@ class JapanInfectedNumber(models.Model):
 
     state = models.CharField(max_length=128)
     positive = models.IntegerField(null=True)
+    positive_per = models.FloatField(null=True)
+    positive_plus = models.IntegerField(null=True)
     hospitalization = models.IntegerField(null=True)
+    hospitalization_per = models.FloatField(null=True)
     discharge = models.IntegerField(null=True)
-    plus = models.IntegerField(null=True)
     discharge_per = models.FloatField(null=True)
     death = models.IntegerField(null=True)
+    death_per = models.FloatField(null=True)
     state_id = models.IntegerField(null=True)
     date = models.CharField(max_length=16, null=True)
 

@@ -7,7 +7,7 @@ from coviddb.models import JapanInfectedNumber, State
 
 from django.core.management.base import BaseCommand
 
-def getKouseiData(url):
+def getKouseiData(url, delta):
     response = requests.get(url)
 
     if response.status_code != 200:
@@ -20,9 +20,9 @@ def getKouseiData(url):
     text = file_data["content"]
     for line in text.splitlines():
         words = line.split(' ')
-        if words[0].endswith('都') or words[0].endswith('道') or words[0].endswith('府') or words[0].endswith('県'):
-            if (len(words) >= 6):
-                words[0].replace(' ', '')
+        if (len(words) >= 6):
+            if words[0+delta].endswith('都') or words[0+delta].endswith('道') or words[0+delta].endswith('府') or words[0+delta].endswith('県'):
+                words[0+delta].replace(' ', '')
                 for i in range(len(words)):
                     words[i] = words[i].replace('%', '')
                     words[i] = words[i].replace('※', '')

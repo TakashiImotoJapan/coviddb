@@ -32,14 +32,15 @@ class MyModelAdmin(admin.ModelAdmin):
 
         list_data = []
         table = ''
-        delta = 1
+        delta = 0
 
         if request.POST.get('url', None):
             print(request.POST.get('url', None))
-            data = getKouseiData(request.POST.get('url', None))
+            data = getKouseiData(request.POST.get('url', None), delta)
             if data != None and len(data) > 0:
                 list_data = pd.DataFrame(data).to_csv(header=False, index=False)
                 table = pd.DataFrame(data).to_html()
+
 
         if request.POST.get('data', None):
             data = request.POST.get('data', None)
@@ -53,24 +54,30 @@ class MyModelAdmin(admin.ModelAdmin):
                 for d in regist:
                     print(d)
                     st = State.objects.get(jp=d[0])
-                    d[1+delta] = d[1+delta] if is_int(d[1+delta]) else 0
                     d[2+delta] = d[2+delta] if is_int(d[2+delta]) else 0
-                    d[3+delta] = d[3+delta] if is_float(d[3+delta]) else 0
-                    d[4+delta] = d[4+delta] if is_int(d[4+delta]) else 0
-                    d[6+delta] = d[6+delta] if is_int(d[6+delta]) else 0
-                    d[8+delta] = d[8+delta] if is_int(d[8+delta]) else 0
+                    d[3+delta] = d[3+delta] if is_int(d[3+delta]) else 0
+                    d[4+delta] = d[4+delta] if is_float(d[4+delta]) else 0
+                    d[5+delta] = d[5+delta] if is_int(d[5+delta]) else 0
+                    d[6+delta] = d[6+delta] if is_float(d[6+delta]) else 0
+                    d[7+delta] = d[7+delta] if is_int(d[7+delta]) else 0
+                    d[8+delta] = d[8+delta] if is_float(d[8+delta]) else 0
+                    d[9+delta] = d[9+delta] if is_int(d[9+delta]) else 0
+                    d[10+delta] = d[10+delta] if is_float(d[10+delta]) else 0
 
                     JapanInfectedNumber.objects.update_or_create(
                         state_id = st.id,
+                        date = datetime.date.today().strftime('%Y/%m/%d'),
                         defaults={
                             'state': st.jp,
-                            'date': datetime.date.today().strftime('%Y/%m/%d'),
-                            'positive': d[1+delta],
-                            'plus': d[2+delta],
-                            'discharge_per': d[3+delta],
-                            'hospitalization': d[4+delta],
-                            'discharge': d[6+delta],
-                            'death': d[8+delta],
+                            'positive': d[2+delta],
+                            'positive_plus': d[3+delta],
+                            'positive_per': d[4+delta],
+                            'hospitalization': d[5+delta],
+                            'hospitalization_per': d[6+delta],
+                            'discharge': d[7+delta],
+                            'discharge_per': d[8+delta],
+                            'death': d[9+delta],
+                            'death_per': d[10+delta],
                         }
                     )
 

@@ -21,8 +21,21 @@
                 <div class="card-body">
                     地方自治体の発表に基づき入力が完了したるデータ分を表示しております。自治体によっては、場所等を公開していない自治体があります。非公開および入力が完了していない都道府県や日時は表示されておりません。必ずしも正確な数字ではありません。
                     <div class="chart">
-                        <canvas id="infNumBarChart" style="min-height: 250px; max-width: 100%;"></canvas>
+                        <canvas id="infNumBarChart" style="min-height: 800px; max-width: 100%;"></canvas>
                     </div>
+                </div>
+            </div>
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">参考資料</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <a href="https://www.mhlw.go.jp/content/10900000/000618504.pdf">厚生労働省全国クラスタマップ</a>
                 </div>
             </div>
         </div>
@@ -40,27 +53,36 @@
 
         var infnumBarChartCanvas = $('#infNumBarChart').get(0).getContext('2d')
 
+        var stackedBarChartOptions = {
+            responsive              : true,
+            maintainAspectRatio     : false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+
         var chart = new Chart(infnumBarChartCanvas, {
             type: "horizontalBar",
             data:{
                 labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
                 datasets:[
+                    {% for value in INFECTED_NUM %}
                     {
-                        label               : '感染者数',
-                        backgroundColor     : 'rgba(0,0,255, 0.5)',
-                        borderColor         : 'rgba(0,0,255, 1)',
-                        borderWidth         : 1,
-                        pointRadius         : false,
-                        pointColor          : '#3b8bba',
-                        pointStrokeColor    : 'rgba(0,0,255, 1)',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(0,0,255, 1)',
-                        data:{{ INFECTED_NUM }}
+                        label               : '{{ value.1 }}',
+                        backgroundColor     : 'rgba({{ value.2 }}, 0.5)',
+                        borderColor         : 'rgba({{ value.2 }}, 1)',
+                        data:{{ value.0 }}
                     },
-                ]
-            },
+                    {% endfor %}
+                ],
+             },
+            options:stackedBarChartOptions
         });
 })
 </script>
 {% endblock %}
-

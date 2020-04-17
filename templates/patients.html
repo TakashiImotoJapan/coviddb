@@ -142,22 +142,22 @@
         var chart = new Chart(ageBarChartCanvas, {
             type: "bar",
             data:{
-            labels:{% autoescape off %}{{ AGE_LABEL }}{% endautoescape %},
-            datasets:[
-                {% for value in AGE_NUM %}
-                {
-                    label               : '{{ value.0 }}',
-                    backgroundColor     : '{{ value.2 }}',
-                    borderColor         : '{{ value.2 }}',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : '{{ value.2 }}',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: '{{ value.2 }}',
-                    data:{{ value.1 }}
-                },
-                {% endfor %}
-            ]
+                labels:{% autoescape off %}{{ AGE_LABEL }}{% endautoescape %},
+                datasets:[
+                    {% for value in AGE_NUM %}
+                    {
+                        label               : '{{ value.0 }}',
+                        backgroundColor     : '{{ value.2 }}',
+                        borderColor         : '{{ value.2 }}',
+                        pointRadius          : false,
+                        pointColor          : '#3b8bba',
+                        pointStrokeColor    : '{{ value.2 }}',
+                        pointHighlightFill  : '#fff',
+                        pointHighlightStroke: '{{ value.2 }}',
+                        data:{{ value.1 }}
+                    },
+                    {% endfor %}
+                ]
             },
             options:stackedBarChartOptions
         });

@@ -8,13 +8,16 @@ from django.db.models import Count
 from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
+from django.db.models import Count, Max
 
 def index(request):
-    numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'plus', 'discharge_per', 'state_id', 'date')
+    numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'positive_plus', 'positive_per', 'state_id', 'date').order_by('date').reverse()
+    numbers = numbers.filter(date=numbers[0][8]).order_by('positive')
 
     date = numbers[0][8].split('/')
 
-    df = pd.DataFrame(numbers).iloc[:,:5]
+    df = pd.DataFrame(numbers)
+    df = df.iloc[:,:5]
 
     amount = [sum(df.iloc[:,1]), sum(df.iloc[:,2]), sum(df.iloc[:,3]), sum(df.iloc[:,4]), sum(pd.DataFrame(numbers).iloc[:,5])]
     df.columns = settings.INFECTED_NUM_HEADER_NAME
@@ -146,7 +149,7 @@ def state(request, state):
                     dnum.append(0)
             age_list.append([age*10, dnum, color[age]])
 
-    numbers = JapanInfectedNumber.objects.filter(state_id=state_id).values_list('positive', 'hospitalization', 'discharge', 'death', 'plus')
+    numbers = JapanInfectedNumber.objects.filter(state_id=state_id).values_list('positive', 'hospitalization', 'discharge', 'death', 'positive_plus')
 
     city_list = pd.DataFrame(InfectedPerson.objects.filter(state=state).values('living_city').annotate(city_count=Count('living_city'))).dropna()
 
@@ -161,13 +164,34 @@ def state(request, state):
 
 def cluster(request):
 
-    inf_numbers = pd.DataFrame(InfectedPerson.objects.values('cluster_location').annotate(ccount=Count('cluster_location')))
+    states = pd.DataFrame(State.objects.values('id', 'romam', 'jp', 'color')).sort_values('id')
+    loc_numbers = pd.DataFrame(InfectedPerson.objects.values('cluster_location').annotate(ccount=Count('cluster_location')))
+    inf_numbers = pd.DataFrame(InfectedPerson.objects.values('cluster_location', 'state').annotate(ccount=Count('cluster_location')).annotate(ccount=Count('state')))
 
-    inf_numbers = inf_numbers.dropna().sort_values('ccount', ascending=False)
+    loc_numbers = loc_numbers.dropna().sort_values('ccount', ascending=False)
+    inf_numbers = inf_numbers.dropna()
+
+    print(loc_numbers.values.tolist())
+    print(inf_numbers.values.tolist())
+#    print(states)
+
+    data = []
+    for st in states.values.tolist():
+        st_data = []
+        for loc in loc_numbers.values.tolist():
+            d = inf_numbers[(inf_numbers['cluster_location'] == loc[0]) & (inf_numbers['state'] == st[1])]
+            if len(d) > 0:
+                st_data.append(d.values.tolist()[0][2])
+            else:
+                st_data.append(0)
+        data.append([st_data, st[2], st[3]])
+
+    print(data)
 
     context = {
-        'CHART_LABEL': inf_numbers['cluster_location'].values.tolist(),
-        'INFECTED_NUM': inf_numbers['ccount'].values.tolist(),
+        'CHART_LABEL': loc_numbers['cluster_location'].values.tolist(),
+#        'INFECTED_NUM': inf_numbers['ccount'].values.tolist(),
+        'INFECTED_NUM': data,
     }
 
     return render(request, 'cluster.html', context)
