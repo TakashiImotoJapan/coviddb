@@ -23,11 +23,13 @@ urlpatterns = [
 
     path('analytics/num_patients', coviddb.views.num_patients, name='num_patients'),
     path('analytics/cluster', coviddb.views.cluster, name='cluster'),
+    path('analytics/city', coviddb.views.city, name='city'),
 
     path('data/<str:state>/', coviddb.views.data, name='data_list'),
     path('data/<str:state>/<int:id>', coviddb.views.detail, name='data_detail'),
 
-    path('state/<str:state>/', coviddb.views.state, name='data_list'),
+    path('state/<str:state>/', coviddb.views.state, name='state'),
+
 
     path('about', coviddb.views.about, name='about'),
     path('info', coviddb.views.info, name='info'),

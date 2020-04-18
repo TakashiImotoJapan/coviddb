@@ -1,0 +1,20 @@
+
+
+<div class="card card-success">
+    <div class="card-header">
+        <h3 class="card-title">{{ TITLE }}</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    <div class="card-body">
+        {{ MESSAGE }}
+        <div class="chart">
+            <canvas id="{{ ID }}" style="min-height: {{ MIN_HEIGHT }}px; height: {{ HEIGHT }}px; max-height: {{ HEIGHT }}px; max-width: 100%;"></canvas>
+        </div>
+    </div>
+</div>
+
+

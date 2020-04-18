@@ -1,9 +1,6 @@
 
 import pandas as pd
-import numpy as np
 from django.conf import settings
-from datetime import datetime as dt
-from datetime import timedelta
 from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
@@ -55,3 +52,44 @@ def getNumByState(conn, col, group):
         nlist.append([jp, lst, co])
 
     return datelist, nlist
+
+def getStateTransition():
+
+    positive_list = []
+    positive_plus_list = []
+    positive_per_list = []
+    positive_incper_list = []
+    hospitalization_list = []
+    discharge_list = []
+    death_list = []
+
+    japan_trans = JapanInfectedNumber.objects.all()
+    states = State.objects.values_list('id', 'romam', 'jp', 'color').filter(disp=1)
+
+    datelist = getDateLabelList("2020/03/15")
+
+    for id, ro, jp, co in states:
+        state_trans = japan_trans.filter(state_id=id)
+        temp = [[],[],[],[],[],[],[]]
+
+        for d in datelist:
+            day_num_list = state_trans.filter(date=d)
+            if len(day_num_list) > 0:
+                values = list(day_num_list.values_list("positive", "positive_plus", "positive_per", "hospitalization", "discharge", "death")[0])
+                values = [x if x is not None else 0 for x in values]
+            else:
+                values = [0, 0, 0, 0, 0, 0]
+
+            if values[0] != 0:
+                values.append(values[1] / values[0])
+            else:
+                values.append(0)
+
+            for i in range(7):
+                temp[i].append(values[i])
+
+
+        for i, data_list in enumerate([positive_list, positive_plus_list, positive_per_list, hospitalization_list, discharge_list, death_list, positive_incper_list]):
+            data_list.append([jp, temp[i], co])
+
+    return datelist, positive_list, positive_plus_list, positive_per_list, positive_incper_list, hospitalization_list, discharge_list, death_list

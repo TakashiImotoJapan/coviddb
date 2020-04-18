@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content_body %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">100名以上の市町村別患者数（判明分のみ）</h3>
+                </div>
+                <div class="card-body">
+                    <div style="width: 100%; text-align: left; margin-bottom: 5px;">
+                    自治体の発表を元に作成しております。東京都は居住市町村を公表していません。非公表、調査分、不明の患者がいるため正確な数字ではありません。
+                    </div>
+                    {% for c in INF_COUNT %}
+                    <div style="width: 20%; float:left;">
+                        <div class="bg-danger" style="text-align: center; margin: 5px; padding-top: 15px; padding-bottom: 5px; height: 80px;">
+                            <div class="inner">
+                                <h6>{{ c.0 }}</h6>
+                                <h4>{{ c.1 }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for ic in LINE_CHART_DATA %}
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE=ic.city_name|add:"の患者数推移" ID=ic.city_name|add:"infcBarChart" MESSAGE="" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block content_script %}
+
+<script src="{% static 'AdminLTE/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'AdminLTE/plugins/chart.js/Chart.min.js' %}"></script>
+
+<script>
+    $(function () {
+        {% for ic in LINE_CHART_DATA %}
+        {% include "parts/stackBar.html" with SBAR_NAME=ic.city_name|add:"infcBarChart" SBAR_LABEL=LINE_CHART_LABEL SBAR_DATA=ic.data %}
+        {% endfor %}
+    })
+</script>
+{% endblock %}
+

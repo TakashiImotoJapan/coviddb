@@ -1,0 +1,39 @@
+
+var {{ SBAR_NAME }}Canvas = $('#{{ SBAR_NAME }}').get(0).getContext('2d')
+
+var {{ SBAR_NAME }}Options = {
+    responsive              : true,
+    maintainAspectRatio     : false,
+    scales: {
+        xAxes: [{
+            stacked: true,
+        }],
+        yAxes: [{
+            stacked: true
+        }]
+    }
+}
+
+var chart = new Chart({{ SBAR_NAME }}Canvas, {
+    type: "bar",
+    data:{
+    labels:{% autoescape off %}{{ SBAR_LABEL }}{% endautoescape %},
+    datasets:[
+        {% for value in SBAR_DATA %}
+        {
+            label               : '{{ value.0 }}',
+            backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
+            borderColor         : 'rgba({{ value.2 }}, 0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
+            data:{{ value.1 }},
+        },
+        {% endfor %}
+    ]
+    },
+    options:{{ SBAR_NAME }}Options,
+});
+

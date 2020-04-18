@@ -4,11 +4,10 @@ import pandas as pd
 from operator import itemgetter
 from django.conf import settings
 from coviddb.util import stateutil
-from django.db.models import Count
 from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
-from django.db.models import Count, Max
+from django.db.models import Count
 
 def index(request):
     numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'positive_plus', 'positive_per', 'state_id', 'date').order_by('date').reverse()
@@ -76,14 +75,25 @@ def detail(request, state, id):
 def num_patients(request):
 
     conn = sqlite3.connect(settings.DB_PATH)
-    datelist, inf_list = stateutil.getNumByState(conn, 'infected_date', 'state')
+#    datelist, inf_list = stateutil.getNumByState(conn, 'infected_date', 'state')
     datelist, ann_list = stateutil.getNumByState(conn, 'announce_date', 'state')
     age_label, age_list = stateutil.getNumByAge(conn, 'announce_date', 'age')
+    state_label, positive_list, positive_plus_list, positive_per_list, positive_incper_list, hospitalization_list, discharge_list, death_list = stateutil.getStateTransition()
     conn.close()
 
+    print(death_list)
+
     context = {
-        'CHART_LABEL': datelist, 'INFECTED_NUM': inf_list, 'ANNOUNCE_NUM': ann_list,
+        'CHART_LABEL': datelist, 'ANNOUNCE_NUM': ann_list,
         'AGE_LABEL': age_label, 'AGE_NUM': age_list,
+        'STATE_LABEL': state_label,
+        'POSITIVE_LIST': positive_list,
+        'POSITIVE_PER_LIST': positive_per_list,
+        'POSITIVE_PLUS_LIST': positive_plus_list,
+        'HOSPITALIZATION_LIST': hospitalization_list,
+        'DISCHARGE_LIST': discharge_list,
+        'DEATH_LIST': death_list,
+        'INC_PER_LIST': positive_incper_list,
     }
 
     return render(request, 'patients.html', context)
@@ -197,3 +207,34 @@ def cluster(request):
     }
 
     return render(request, 'cluster.html', context)
+
+def city(request):
+
+    inf_count = InfectedPerson.objects.values_list('living_city').annotate(city_count=Count('living_city')).filter(city_count__gte=100).order_by('city_count').reverse()
+
+    linechart_data = []
+    datelist = getDateLabelList()
+
+    for name, count in inf_count:
+        daily_count = InfectedPerson.objects.values_list('announce_date').filter(living_city=name).annotate(city_count=Count('announce_date'))
+
+        temp = []
+        for d in datelist:
+            n = daily_count.filter(announce_date=d)
+            if len(n) > 0:
+                temp.append(n[0][1])
+            else:
+                temp.append(0)
+
+        linechart_data.append({
+            'city_name': name,
+            'data': [["陽性感染者数", temp, "64, 128, 255"]]
+        })
+
+    context = {
+        'INF_COUNT': pd.DataFrame(inf_count).values.tolist(),
+        'LINE_CHART_LABEL': datelist,
+        'LINE_CHART_DATA': linechart_data,
+    }
+
+    return render(request, 'city.html', context)

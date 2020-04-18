@@ -6,61 +6,27 @@
 {% endblock %}
 
 {% block content_body %}
-
     <div class="row">
         <div class="col-12">
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title">患者数推移（全国:公表日別）</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
-                    <div class="chart">
-                        <canvas id="announceBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
-                    </div>
-                </div>
-            </div>
+            {% include "parts/canvas.html" with TITLE="都道府県別患者数推移" ID="announceBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title">患者数推移（全国:発症日別）</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    発表日ではなく発症日です。東京都など発症日が調査中の都道府県があり、実際より少ない数になっています。
-                    <div class="chart">
-                        <canvas id="stackedBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
-                    </div>
-                </div>
-            </div>
+            {% include "parts/canvas.html" with TITLE="都道府県別死亡者数推移" ID="deathBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            <div class="card card-success">
-                <div class="card-header">
-                    <h3 class="card-title">年代別推移</h3>
-
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。
-                    <div class="chart">
-                        <canvas id="ageBarChart" style="min-height: 250px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
-                    </div>
-                </div>
-            </div>
+            {% include "parts/canvas.html" with TITLE="人口一万人あたりの感染者数推移" ID="positivePerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="都道府県別の患者増加数" ID="positivePlusBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="対患者数の増加率" ID="positiveIncPerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="患者数推移（全国:発症日別）" ID="stackedBarChart" MESSAGE="発表日ではなく発症日です。東京都など発症日が調査中の都道府県があり、実際より少ない数になっています。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="年代別推移" ID="ageBarChart" MESSAGE="入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
     </div>
 {% endblock %}
@@ -73,94 +39,13 @@
 
 <script>
     $(function () {
-
-        var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-
-        var stackedBarChartOptions = {
-            responsive              : true,
-            maintainAspectRatio     : false,
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
-            }
-        }
-
-        var chart = new Chart(stackedBarChartCanvas, {
-            type: "bar",
-            data:{
-            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
-            datasets:[
-                {% for value in INFECTED_NUM %}
-                {
-                    label               : '{{ value.0 }}',
-                    backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
-                    borderColor         : 'rgba({{ value.2 }}, 0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
-                    data:{{ value.1 }}
-                },
-                {% endfor %}
-            ]
-            },
-            options:stackedBarChartOptions
-        });
-
-        var announceBarChartCanvas = $('#announceBarChart').get(0).getContext('2d')
-
-        var chart = new Chart(announceBarChartCanvas, {
-            type: "bar",
-            data:{
-            labels:{% autoescape off %}{{ CHART_LABEL }}{% endautoescape %},
-            datasets:[
-                {% for value in ANNOUNCE_NUM %}
-                {
-                    label               : '{{ value.0 }}',
-                    backgroundColor     : 'rgba({{ value.2 }}, 0.8)',
-                    borderColor         : 'rgba({{ value.2 }}, 0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba({{ value.2 }}, 0.8)',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba({{ value.2 }}, 0.8)',
-                    data:{{ value.1 }}
-                },
-                {% endfor %}
-            ]
-            },
-            options:stackedBarChartOptions
-        });
-
-        var ageBarChartCanvas = $('#ageBarChart').get(0).getContext('2d')
-
-        var chart = new Chart(ageBarChartCanvas, {
-            type: "bar",
-            data:{
-                labels:{% autoescape off %}{{ AGE_LABEL }}{% endautoescape %},
-                datasets:[
-                    {% for value in AGE_NUM %}
-                    {
-                        label               : '{{ value.0 }}',
-                        backgroundColor     : '{{ value.2 }}',
-                        borderColor         : '{{ value.2 }}',
-                        pointRadius          : false,
-                        pointColor          : '#3b8bba',
-                        pointStrokeColor    : '{{ value.2 }}',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: '{{ value.2 }}',
-                        data:{{ value.1 }}
-                    },
-                    {% endfor %}
-                ]
-            },
-            options:stackedBarChartOptions
-        });
+        {% include "parts/stackBar.html" with SBAR_NAME="announceBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_LIST %}
+        {% include "parts/stackBar.html" with SBAR_NAME="deathBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=DEATH_LIST %}
+        {% include "parts/lineChart.html" with SBAR_NAME="positivePerBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_PER_LIST %}
+        {% include "parts/lineChart.html" with SBAR_NAME="positivePlusBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_PLUS_LIST %}
+        {% include "parts/lineChart.html" with SBAR_NAME="positiveIncPerBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=INC_PER_LIST %}
+        {% include "parts/stackBar.html" with SBAR_NAME="stackedBarChart" SBAR_LABEL=CHART_LABEL SBAR_DATA=ANNOUNCE_NUM %}
+        {% include "parts/stackBar.html" with SBAR_NAME="ageBarChart" SBAR_LABEL=AGE_LABEL SBAR_DATA=AGE_NUM %}
     })
 </script>
 {% endblock %}
