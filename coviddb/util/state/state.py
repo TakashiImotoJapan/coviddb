@@ -186,10 +186,6 @@ def getChibaData(url):
     if response.status_code != 200:
         return
 
-
-
-    print(response.text.encode("EUC_JP"))
-
     file_data = parser.from_buffer(response.content)
     text = file_data["content"]
 

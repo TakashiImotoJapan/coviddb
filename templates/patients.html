@@ -8,25 +8,31 @@
 {% block content_body %}
     <div class="row">
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="都道府県別患者数推移" ID="announceBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="陽性判定者数推移（都道府県別）" ID="announceBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="都道府県別死亡者数推移" ID="deathBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="入院患者数推移（都道府県別）" ID="hospitalBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="人口一万人あたりの感染者数推移" ID="positivePerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="退院済み患者数推移（都道府県別）" ID="dischargeBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="都道府県別の患者増加数" ID="positivePlusBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="死亡者数推移（都道府県別）" ID="deathBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した3/18からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="対患者数の増加率" ID="positiveIncPerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="人口一万人あたりの感染者数推移（都道府県別）" ID="positivePerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="患者数推移（全国:発症日別）" ID="stackedBarChart" MESSAGE="発表日ではなく発症日です。東京都など発症日が調査中の都道府県があり、実際より少ない数になっています。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="患者増加数（都道府県別）" ID="positivePlusBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
         <div class="col-12">
-            {% include "parts/canvas.html" with TITLE="年代別推移" ID="ageBarChart" MESSAGE="入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。" MIN_HEIGHT=250 HEIGHT=500 only %}
+            {% include "parts/canvas.html" with TITLE="対患者数の増加率（都道府県別）" ID="positiveIncPerBarChart" MESSAGE="厚生労働省発表が都道府県別患者数を発表した4/1からのデータに基づき作成。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="発症日別:陽性判定者数推移（都道府県別）" ID="stackedBarChart" MESSAGE="発表日ではなく発症日です。東京都など発症日が調査中の都道府県があり、実際より少ない数になっています。" MIN_HEIGHT=250 HEIGHT=500 only %}
+        </div>
+        <div class="col-12">
+            {% include "parts/canvas.html" with TITLE="年代別:陽性判定者数推移" ID="ageBarChart" MESSAGE="入力されているデータ分を表示しております。入力が完了していない都道府県や日時は表示されておりません。" MIN_HEIGHT=250 HEIGHT=500 only %}
         </div>
     </div>
 {% endblock %}
@@ -40,6 +46,8 @@
 <script>
     $(function () {
         {% include "parts/stackBar.html" with SBAR_NAME="announceBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_LIST %}
+        {% include "parts/stackBar.html" with SBAR_NAME="hospitalBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=HOSPITALIZATION_LIST %}
+        {% include "parts/stackBar.html" with SBAR_NAME="dischargeBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=DISCHARGE_LIST %}
         {% include "parts/stackBar.html" with SBAR_NAME="deathBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=DEATH_LIST %}
         {% include "parts/lineChart.html" with SBAR_NAME="positivePerBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_PER_LIST %}
         {% include "parts/lineChart.html" with SBAR_NAME="positivePlusBarChart" SBAR_LABEL=STATE_LABEL SBAR_DATA=POSITIVE_PLUS_LIST %}
