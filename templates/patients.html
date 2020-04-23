@@ -2,7 +2,14 @@
 
 {% load static %}
 
+{% block html_header %}
+    <title>日本の新型コロナ(COVID-19)に関する統計分析データ</title>
+    <meta name="description" content="新型コロナウイルス(COVID-19)に関する患者情報や統計情報など各種分析データの提供。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+{% endblock %}
+
 {% block content_header %}
+    {% include 'base/header.html' with title="日本の新型コロナ(COVID-19)に関する患者数推移" breadcrumb="全国患者数推移" only %}
 {% endblock %}
 
 {% block content_body %}

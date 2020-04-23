@@ -2,46 +2,33 @@
 
 {% load static %}
 
+{% block html_header %}
+    <title>データの利用について</title>
+    <meta name="description" content="新型コロナウイルス(COVID-19)に関する患者情報や統計情報など各種分析データの提供。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+{% endblock %}
+
 {% block content_header %}
-    <style type="text/css">
-    <!--
-    tr th:nth-of-type(1) { width:30% }
-    -->
-    </style>
+    {% include 'base/header.html' with title="本サイトのデータ利用について" breadcrumb="データの利用について" only %}
 {% endblock %}
 
 {% block content_body %}
 
-    <div class="content-header">
-		<h1 class="text-dark">このサイトについて</h1>
-    </div>
+    <h4>データのライセンス</h4>
     <div class="content px-2">
         このサイトのデータは順次、JSONなどで公開いたします。<br>
         本サイトのデータは全て、クリエイティブコモンズライセンス(CC BY 4.0)に基づき公開されています。<br>
-        非商用においては自由に利用可能です。<br>
-        商用利用に関しては、info@media-sketch.comまでお問い合わせください。<br>
+        データの利用に際しては、クリエイティブコモンズの条項に基づき、著作権者の表記が必要です。<br>
+        表記する際には、CC BY 4.0の表記、サイト名「COVID-19 Database Japan」、サイトURL「http://covid19db.info/」を表記してください。<br>
         <img style="width: 200px; padding: 20px;" src="{% static 'img/cc.png' %}">
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        更新履歴
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        <li>2020/4/9 岡山,福岡,大分 更新</li>
-                        <li>2020/4/9 北海道,福井,兵庫 更新</li>
-                        <li>2020/4/4 大阪,東京 更新</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <h4>データ利用に関する注意事項</h4>
+    <div class="content px-2">
+        非商用においては、ランセンスおよびサイトURL表記の上、自由に利用可能です。<br>
+        承諾なしに、データを販売および、データそのものをコンテンツとした書籍などを販売する事は禁止します。<br>
+        商用利用に関しては、上記に該当しない場合は問題ありませんが、混乱を防ぐために事前にinfo@media-sketch.comまでお問い合わせください。<br>
     </div>
-
 {% endblock %}
 
 

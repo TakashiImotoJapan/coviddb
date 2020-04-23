@@ -2,12 +2,15 @@
 
 {% load static %}
 
+{% block html_header %}
+    <title>{{ STATE_NAME }}の患者データ詳細 | COVID-19 Database Japan</title>
+    <meta name="description" content="{{ STATE_NAME }}の患者データ。都道府県発表報道データに基づく。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+    <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% endblock %}
+
 {% block content_header %}
-    <style type="text/css">
-    <!--
-    tr th:nth-of-type(1) { width:30% }
-    -->
-    </style>
+    {% include 'base/header.html' with title=STATE_NAME|add:"の患者データ詳細" breadcrumb=STATE_NAME|add:"の患者データ" only %}
 {% endblock %}
 
 {% block content_body %}

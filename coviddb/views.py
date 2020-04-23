@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import os
 import sqlite3
 import pandas as pd
 from operator import itemgetter
@@ -7,7 +8,7 @@ from coviddb.util import stateutil
 from coviddb.util.dateutil import getDateLabelList
 
 from coviddb.models import *
-from django.db.models import Count
+from django.db.models import Count, Max
 
 def index(request):
     numbers = JapanInfectedNumber.objects.values_list('state', 'positive', 'hospitalization', 'discharge', 'death', 'positive_plus', 'positive_per', 'state_id', 'date').order_by('date').reverse()
@@ -39,7 +40,7 @@ def index(request):
 
 def data(request, state):
     conn = sqlite3.connect(settings.DB_PATH)
-    col = itemgetter(*settings.INFECTED_LIST_SIMPLE_COLUMN_INDEX)(settings.INFECTED_LIST_COLUMN_NAME)
+    st = State.objects.get(romam=state)
 
     df = pd.DataFrame(list(InfectedPerson.objects.filter(state=state).values('state', 'pat_id', 'announce_date', 'infected_date', 'living_city', 'age', 'sex', 'status', 'symptoms', 'occupation', 'close_contact')))
 
@@ -50,13 +51,16 @@ def data(request, state):
     df = df.rename(columns=settings.INFECTED_LIST_HEADER_DICT)
     conn.close()
     table = df.to_html(index=False, escape=False, table_id='data_table', classes='table table-bordered table-striped')
-    context = {'INFECTED_LIST': table}
+    context = {
+        'INFECTED_LIST': table,
+        'STATE_NAME': st.jp,
+    }
 
     return render(request, 'data.html', context)
 
 def detail(request, state, id):
 
-    conn = sqlite3.connect(settings.DB_PATH)
+    st = State.objects.get(romam=state)
 
     df = pd.DataFrame(list(InfectedPerson.objects.filter(pat_id=id).filter(state=state).values()))
 
@@ -64,11 +68,14 @@ def detail(request, state, id):
     df['full_presentation'] = df['full_presentation'].str.replace('\n', '<br>')
     df = df.rename(columns=settings.INFECTED_LIST_HEADER_DICT)
     df.index = ['データ']
-    print(df.head())
-    conn.close()
+    df = df.drop('id', axis=1)
+    df.iloc[0, 0] = st.jp
 
     table = df.transpose().to_html(escape=False, table_id='data_table', classes='table table-bordered table-striped')
-    context = {'INFECTED_DATA': table}
+    context = {
+        'INFECTED_DATA': table,
+        'STATE_NAME': st.jp,
+    }
 
     return render(request, 'detail.html', context)
 
@@ -109,6 +116,18 @@ def about_data(request):
 
 def data_link(request):
     return render(request, 'data_link.html')
+
+def data_update(request):
+
+    module_dir = os.path.dirname(__file__)
+    df = pd.read_json(os.path.join(module_dir, 'json/data_update.json'))
+    df.columns = ['ID', '都道府県', '最終更新日']
+
+    context = {
+        'TABLE': df.sort_values('ID').to_html(index=False, escape=False, table_id='data_table', classes='table table-sm table-striped'),
+    }
+
+    return render(request, 'data_update.html', context)
 
 def checkdate(s):
     date_format = '%Y/%M/%d'

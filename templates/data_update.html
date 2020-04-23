@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block html_header %}
+    <title>新型コロナ(COVID-19)に関する参考データ</title>
+    <meta name="description" content="新型コロナ(COVID-19)に関するデータの更新情報。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+{% endblock %}
+
+{% block content_header %}
+    {% include 'base/header.html' with title="新型コロナ(COVID-19)に関するデータの更新情報" breadcrumb="データの更新情報" only %}
+{% endblock %}
+
+{% block content_body %}
+
+        <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        都道府県別のデータ最終更新日一覧
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {{ TABLE|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content_script %}
+{% endblock %}
+

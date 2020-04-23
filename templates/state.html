@@ -2,7 +2,14 @@
 
 {% load static %}
 
+{% block html_header %}
+    <title>新型コロナに関する{{ STATE_NAME }}のデータ分析ページ | COVID-19 Database Japan</title>
+    <meta name="description" content="{{ STATE_NAME }}の分析データのページ。都道府県発表報道データに基づく。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+{% endblock %}
+
 {% block content_header %}
+    {% include 'base/header.html' with title=STATE_NAME|add:"のデータ分析ページ" breadcrumb=STATE_NAME|add:"のデータ分析" only %}
 {% endblock %}
 
 {% block content_body %}

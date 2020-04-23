@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/analytics/city" class="nav-link {% active '^/analytics/num_patients' %}">
+                            <a href="/analytics/city" class="nav-link {% active '^/analytics/city' %}">
                                 <i class="far nav-icon"></i>
                                 <p>重点市町村のデータ</p>
                             </a>
@@ -62,7 +62,7 @@
                         {% endfor %}
                     </ul>
                 </li>
-                <li class="nav-item has-treeview {% menu_open '^/data' %}">
+                <li class="nav-item has-treeview {% menu_open '^/data/' %}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>一覧データ<i class="fas fa-angle-left right"></i></p>
@@ -81,21 +81,27 @@
 
                 <li class="nav-header">このサイトについて</li>
                 <li class="nav-item">
-                    <a href="/about" class="nav-link">
+                    <a href="/about" class="nav-link" {% active '^/about/' %}>
                         <i class="nav-icon fas fa-bullhorn"></i>
                         <p>サイトの利用について</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/about_data" class="nav-link">
+                    <a href="/about_data" class="nav-link" {% active '^/about_data/' %}>
                         <i class="nav-icon fas fa-database"></i>
                         <p>データの利用について</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/data_link" class="nav-link">
-                        <i class="nav-icon fas fa-database"></i>
-                        <p>参照データ</p>
+                    <a href="/data_update" class="nav-link" {% active '^/data_update' %}>
+                        <i class="nav-icon fas fa-keyboard"></i>
+                        <p>データ更新状況</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/data_link" class="nav-link" {% active '^/data_link' %}>
+                        <i class="nav-icon fas fa-link"></i>
+                        <p>参考リンク</p>
                     </a>
                 </li>
             </ul>

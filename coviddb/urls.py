@@ -35,6 +35,7 @@ urlpatterns = [
     path('info', coviddb.views.info, name='info'),
     path('about_data', coviddb.views.about_data, name='about_data'),
     path('data_link', coviddb.views.data_link, name='data_link'),
+    path('data_update', coviddb.views.data_update, name='data_update'),
 
     url(r'^manage/', admin.site.urls),
 ]

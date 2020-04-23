@@ -1,43 +1,12 @@
-{% load static %}
+    <div class="col-lg-8">
+        <h1 class="m-0 text-dark">{{ title }}</h1>
+    </div>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>COVID-19 Database Japan</title>
-<!-- Tell the browser to be responsive to screen width -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/fontawesome-free/css/all.css' %}">
-<!-- Ionicons -->
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-<!-- Tempusdominus Bbootstrap 4 -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
-<!-- iCheck -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-<!-- JQVMap -->
-<link rel="stylesheet" href="{% static 'jqvmap/jquery-jvectormap-2.0.5.css' %}">
-<!-- Theme style -->
-<link rel="stylesheet" href="{% static 'AdminLTE/dist/css/adminlte.min.css' %}">
-<!-- overlayScrollbars -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-<!-- Daterange picker -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/daterangepicker/daterangepicker.css' %}">
-<!-- summernote -->
-<link rel="stylesheet" href="{% static 'AdminLTE/plugins/summernote/summernote-bs4.css' %}">
-
-<link rel="stylesheet" href="{% static 'my.css' %}">
-
-<!-- Google Font: Source Sans Pro -->
-<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
-<style>
-body {
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-font-weight: 400;
-overflow-x: hidden;
-overflow-y: auto;
-font-size: 14px
-}
-</style>
-
+    <div class="col-sm-4">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% if breadcrumb|length > 0 %}
+            <li class="breadcrumb-item active">{{ breadcrumb }}</li>
+            {% endif %}
+        </ol>
+    </div>

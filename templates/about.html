@@ -2,30 +2,28 @@
 
 {% load static %}
 
+{% block html_header %}
+    <title>本サイトに関する説明 | COVID-19 Database Japan</title>
+    <meta name="description" content="新型コロナウイルス(COVID-19)に関する患者情報や統計情報など各種分析データの提供。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
+{% endblock %}
+
 {% block content_header %}
-    <style type="text/css">
-    <!--
-    tr th:nth-of-type(1) { width:30% }
-    -->
-    </style>
+    {% include 'base/header.html' with title="新型コロナウイルス データ分析サイト COVID-19 Database Japanについて" breadcrumb="本サイトに関する説明" only %}
 {% endblock %}
 
 {% block content_body %}
 
-    <div class="content-header">
-		<h1 class="text-dark">このサイトについて</h1>
-    </div>
 
     <div class="content px-2">
-        このサイトは、伊本貴士および、ボランティアによって開発されております。<br>
+        このサイトは、伊本貴士および、<a href="https://www.facebook.com/groups/218786599431322/">COVID-19オープンデータベース作成委員会</a>のボランティアによって開発、運営されております。<br>
         このサイトのデータは、都道府県の報道発表資料を参考に作成したものです。<br>
-        データ、その他について、決して正確である事を保証するものではありません<br>
+        データに関して、ボランティアによる手入力で行っている事もあり間違っている可能性があります。<br>
+        データ、その他について、本サイトの内容全てについて、正確である事を保証するものではありません。<br>
         <br>
-        このサイトに関するお問い合わせは、info@media-sketch.comまでご連絡ください。<br>
+        このサイトに関するお問い合わせは、<a href="mailto:info@media-sketch.com">info@media-sketch.com</a>までご連絡ください。<br>
         <br>
-        サイト制作：<a href="https://www.facebook.com/groups/218786599431322/">COVID-19オープンデータベース作成委員会</a><br>
         発起人：伊本 貴士（info@media-sketch.com）
-        データ入力協力（Facebookの名前表記）：Ikumi Amano Fukuyamaさん、池邉 剛彦さん、
     </div>
 
 {% endblock %}

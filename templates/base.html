@@ -2,59 +2,47 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    {% include 'base/header.html' %}
-    {% block content_header %}
-    {% endblock %}
-</head>
+    <head>
+        {% block html_header %}{% endblock %}
+        {% include 'base/style.html' %}
+    </head>
 
 
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div class="wrapper">
+            {% include 'base/nav.html' %}
+            {% include 'base/sidebar.html' %}
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            {% block content_header %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
 
-    {% include 'base/nav.html' %}
+                <section class="content">
+                    <div class="container-fluid">
+                        {% block content_body %}
+                        {% endblock %}
+                    </div>
+                </section>
+            </div>
 
-    {% include 'base/sidebar.html' %}
+            <footer class="main-footer">
+                {% include 'base/footer.html' %}
+            </footer>
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-
-            </div><!-- /.container-fluid -->
+            <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            </aside>
         </div>
-        <!-- /.content-header -->
 
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                {% block content_body %}
-                {% endblock %}
-            </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
-    </div>
+        {% include 'base/js.html' %}
 
-    <!-- /.content-wrapper -->
-  <footer class="main-footer">
-      {% include 'base/footer.html' %}
-  </footer>
+        {% block content_script %}
+        {% endblock %}
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
-
-{% include 'base/js.html' %}
-
-{% block content_script %}
-{% endblock %}
-
-</body>
+    </body>
 </html>
 

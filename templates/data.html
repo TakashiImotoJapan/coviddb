@@ -2,8 +2,15 @@
 
 {% load static %}
 
-{% block content_header %}
+{% block html_header %}
+    <title>{{ STATE_NAME }}における新型コロナ陽性者データ一覧 | COVID-19 Database Japan</title>
+    <meta name="description" content="{{ STATE_NAME }}の患者データ一覧。都道府県発表報道データに基づく。有志によるコミュニティCOVID-19オープンデータベース作成委員会による政策運営。様々な分析データなどを研究者向けにオープンデータで提供中。">
+    <meta name="keywords" content="新型コロナ, データ">
     <link rel="stylesheet" href="{% static 'AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% endblock %}
+
+{% block content_header %}
+    {% include 'base/header.html' with title=STATE_NAME|add:"における新型コロナ陽性者データ一覧" breadcrumb=STATE_NAME|add:"の一覧" only %}
 {% endblock %}
 
 {% block content_body %}
