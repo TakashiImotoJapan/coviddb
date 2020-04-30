@@ -1,11 +1,9 @@
 
 
 import requests
-import datetime
 from tika import parser
-from coviddb.models import JapanInfectedNumber, State
-
-from django.core.management.base import BaseCommand
+import django
+import os
 
 def getKouseiData(url, delta):
     response = requests.get(url)
@@ -18,6 +16,9 @@ def getKouseiData(url, delta):
     file_data = parser.from_buffer(response.content)
     # file_data = parser.from_file("./temp.pdf")
     text = file_data["content"]
+
+    print(text)
+
     for line in text.splitlines():
         words = line.split(' ')
         if (len(words) >= 6):
@@ -27,5 +28,6 @@ def getKouseiData(url, delta):
                     words[i] = words[i].replace('%', '')
                     words[i] = words[i].replace('※', '')
                 data.append(words)
+
 
     return data;

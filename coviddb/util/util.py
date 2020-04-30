@@ -31,3 +31,6 @@ def is_int(n):
         return False
     else:
         return True
+
+def trans_fullwidth(in_str):
+    return in_str.translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))

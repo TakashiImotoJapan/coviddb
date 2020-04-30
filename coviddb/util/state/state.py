@@ -55,29 +55,32 @@ def getOsakaData(url):
     if response.status_code != 200:
         return
 
-    df = pandas.read_excel(BytesIO(response.content))
+    df = pandas.read_excel(BytesIO(response.content), sheet_name='個票')
 
     df = df.rename(columns=lambda x: x if not 'Unnamed' in str(x) else '')
     df = df.reset_index()
+    df = df.fillna('')
 
     data = []
 
     for d in df.iterrows():
+        if (type(d[1][1]) == float):
+            d[1][1] = int(d[1][1])
         if (type(d[1][1]) == int):
-            print(d[1])
             p = InfectedPerson()
             p.state = 'osaka'
-            p.pat_id = d[1][1]
+            p.pat_id = int(d[1][1])
             p.age = d[1][2]
             p.setSexStr(d[1][3])
-            p.living_city = str(d[1][4]) + str(d[1][6])
-            p.occupation = job = d[1][9]
-            p.infected_date = createDateStr(d[1][11])
-            p.status = d[1][13]
+            p.living_city = str(d[1][4])
+#            p.living_city = str(d[1][4]) + str(d[1][6])
+            p.occupation = job = d[1][6]
+            p.infected_date = createDateStr(d[1][7])
+            p.status = d[1][8]
 
-            p.setCloseContact(d[1][15])
+            p.setCloseContact(d[1][9])
 
-            p.remarks = d[1][18]
+            p.remarks = d[1][10]
 
             data.append(p.to_csv())
 

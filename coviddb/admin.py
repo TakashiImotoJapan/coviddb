@@ -37,9 +37,10 @@ class MyModelAdmin(admin.ModelAdmin):
         if request.POST.get('url', None):
             print(request.POST.get('url', None))
             data = getKouseiData(request.POST.get('url', None), delta)
+            df = pd.DataFrame(data).fillna(0)
             if data != None and len(data) > 0:
-                list_data = pd.DataFrame(data).to_csv(header=False, index=False)
-                table = pd.DataFrame(data).to_html()
+                list_data = df.to_csv(header=False, index=False)
+                table = df.to_html()
 
 
         if request.POST.get('data', None):

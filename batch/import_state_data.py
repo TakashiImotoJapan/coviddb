@@ -14,7 +14,7 @@ django.setup()
 
 from coviddb.models import State
 
-flist = glob.glob("../data/state/state.csv")
+flist = glob.glob("../data/state/state-data.csv")
 
 conn = sqlite3.connect('../db.sqlite3')
 

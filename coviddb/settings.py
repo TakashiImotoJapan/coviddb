@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import coviddb
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'coviddb',
 ]
 
@@ -132,6 +134,17 @@ STATICFILES_DIRS = (
 
 DB_PATH = 'db.sqlite3'
 INFECTED_LIST_TABLE_NAME = "coviddb_infectedperson"
+
+CRONJOBS = [
+    ('0 1 * * *', 'coviddb.cron.ministry.run', '>> /tmp/scheduled_job.log'),
+]
+
+SMTP_SERVER = ""
+SMTP_PORT = 587
+SMTP_USER = ""
+SMTP_PASSWORD = ""
+
+AUDIT_ADDR = ""
 
 INFECTED_LIST_COLUMN_NAME = [
     'state','pat_id','city_no',

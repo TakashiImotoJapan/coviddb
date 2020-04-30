@@ -2,7 +2,6 @@ from django.shortcuts import render
 import os
 import sqlite3
 import pandas as pd
-from operator import itemgetter
 from django.conf import settings
 from coviddb.util import stateutil
 from coviddb.util.dateutil import getDateLabelList
