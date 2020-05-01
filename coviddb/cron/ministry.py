@@ -131,5 +131,5 @@ def getKouseiData(url, word_delta):
 
     return data;
 
-run()
+# run()
 
