@@ -19,7 +19,7 @@ from coviddb.util.util import trans_fullwidth
 
 def run():
     try:
-        day_delta = 5
+        day_delta = 0
         pdf_url = getURL(day_delta)
         print("URL(getURL):" + pdf_url)
 
