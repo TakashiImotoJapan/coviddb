@@ -19,8 +19,10 @@ from coviddb.util.util import trans_fullwidth
 
 def run():
     try:
-        day_delta = 0
+        day_delta = 5
         pdf_url = getURL(day_delta)
+        print("URL(getURL):" + pdf_url)
+
         if(len(pdf_url) <= 0):
             failMail("No URL.")
         else:
@@ -36,7 +38,12 @@ def failMail(msg):
 def getData(url, day_delta):
     word_delta = 0
     data = getKouseiData(url, word_delta)
+
+    print("URL(getKouseiData):" + url)
+
     df = pandas.DataFrame(data).fillna(0)
+
+    print(df)
 
     for data in df.iterrows():
         regist(list(data[1]), day_delta)
@@ -77,6 +84,8 @@ def getURL(day_delta):
     mon_str = datetime.datetime.strftime(d_today, '%Y%m')
     url = 'https://www.mhlw.go.jp/stf/houdou/houdou_list_%s.html' % mon_str
 
+    print("getURL(1):" + url)
+
     res = requests.get(url)
     content_type_encoding = res.encoding if res.encoding != 'ISO-8859-1' else None
     soup = BeautifulSoup(res.content, 'html.parser', from_encoding=content_type_encoding)
@@ -96,6 +105,9 @@ def getURL(day_delta):
             ymd[0] = int(ymd[0]) + 2018
 
             if datetime.datetime.strftime(d_today, '%Y%m%d') == "%04d%02d%02d" % (ymd[0], ymd[1], ymd[2]):
+
+                print("getURL(2):" + "%04d%02d%02d" % (ymd[0], ymd[1], ymd[2]))
+
                 date_url = "https://www.mhlw.go.jp" + l.get('href')
 
                 sub_res = requests.get(date_url)
@@ -121,15 +133,19 @@ def getKouseiData(url, word_delta):
     for line in text.splitlines():
         words = line.split(' ')
         if (len(words) >= 6):
+
+            if is_int(words[0]):
+                words = words[1:]
+
             if words[0+word_delta].endswith('都') or words[0+word_delta].endswith('道') or words[0+word_delta].endswith('府') or words[0+word_delta].endswith('県'):
                 words[0+word_delta].replace(' ', '')
                 for i in range(len(words)):
                     words[i] = words[i].replace('%', '')
                     words[i] = words[i].replace('※', '')
+                    words[i] = words[i].replace(',', '')
                 data.append(words)
-
 
     return data;
 
-# run()
+run()
 
